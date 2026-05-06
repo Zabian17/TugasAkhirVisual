@@ -56,3 +56,8 @@ desktop.ini
 # ========================
 *.log
 logs/
+
+# ========================
+# Project Notes (local only)
+# ========================
+PROGRESS.txt
