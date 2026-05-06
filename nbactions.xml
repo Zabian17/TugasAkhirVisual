@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project-actions PUBLIC
+    "-//NetBeans//DTD Action Mapping 1.1//EN"
+    "https://netbeans.apache.org/dtds/action-mapping-1_1.dtd">
+<actions>
+
+    <!-- Run (F6) -->
+    <action>
+        <actionName>run</actionName>
+        <goals>
+            <goal>javafx:run</goal>
+        </goals>
+    </action>
+
+    <!-- Debug (F5) -->
+    <action>
+        <actionName>debug</actionName>
+        <goals>
+            <goal>javafx:run</goal>
+        </goals>
+        <properties>
+            <javafx.options>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</javafx.options>
+        </properties>
+    </action>
+
+    <!-- Clean and Build -->
+    <action>
+        <actionName>build</actionName>
+        <goals>
+            <goal>package</goal>
+        </goals>
+    </action>
+
+    <!-- Clean -->
+    <action>
+        <actionName>clean</actionName>
+        <goals>
+            <goal>clean</goal>
+        </goals>
+    </action>
+
+</actions>

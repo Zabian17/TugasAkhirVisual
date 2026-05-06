@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+
+<HBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.mycompany.tugas_akhir.LoginController"
+      prefHeight="600.0" prefWidth="950.0"
+      stylesheets="@../css/login.css">
+
+    <AnchorPane styleClass="left-panel">
+        <HBox.margin><Insets/></HBox.margin>
+
+        <HBox spacing="8" alignment="CENTER_LEFT"
+              AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20">
+            <StackPane styleClass="logo-box">
+                <Label text="⬡" styleClass="logo-icon-text"/>
+            </StackPane>
+            <VBox spacing="1">
+                <Label text="GUDANGKU" styleClass="logo-title"/>
+                <Label text="SISTEM MANAGEMENT GUDANG" styleClass="logo-subtitle"/>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="6" alignment="CENTER_RIGHT"
+              AnchorPane.rightAnchor="0" AnchorPane.topAnchor="200">
+
+            <StackPane fx:id="tabSignUp" styleClass="tab-btn-active"
+                       onMouseClicked="#showSignUp">
+                <Label fx:id="lblSignUp" text="SIGN UP" styleClass="tab-label-active"/>
+            </StackPane>
+
+            <StackPane fx:id="tabSignIn" styleClass="tab-btn"
+                       onMouseClicked="#showSignIn">
+                <Label fx:id="lblSignIn" text="SIGN IN" styleClass="tab-label"/>
+            </StackPane>
+        </VBox>
+
+        <VBox spacing="6" AnchorPane.bottomAnchor="30" AnchorPane.leftAnchor="24" AnchorPane.rightAnchor="16">
+            <TextFlow>
+                <Text text="Monitor&#10;Gudang anda&#10;secara " styleClass="hero-title"/>
+                <Text text="Real time" styleClass="hero-highlight"/>
+            </TextFlow>
+            <Label text="Stok, movement, report&#10;dalam satu platform"
+                   styleClass="hero-subtitle" wrapText="true"/>
+        </VBox>
+    </AnchorPane>
+
+    <AnchorPane styleClass="right-panel" HBox.hgrow="ALWAYS">
+
+        <VBox fx:id="signUpPane" spacing="16" alignment="CENTER"
+              AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="60" AnchorPane.rightAnchor="60">
+
+            <Label text="Welcome 👋" styleClass="welcome-title"/>
+            <Label text="Create account to continue" styleClass="welcome-subtitle"/>
+            <VBox spacing="12" maxWidth="420" fillWidth="true">
+                <VBox.margin><Insets top="10"/></VBox.margin>
+
+                <HBox styleClass="field-container" alignment="CENTER_LEFT">
+                    <Label text="👤" styleClass="field-icon"/>
+                    <Rectangle styleClass="field-divider" width="1.2" height="28"/>
+                    <TextField fx:id="tfFullName" promptText="Full Name"
+                               styleClass="text-field-clean" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox styleClass="field-container" alignment="CENTER_LEFT">
+                    <Label text="✉" styleClass="field-icon"/>
+                    <Rectangle styleClass="field-divider" width="1.2" height="28"/>
+                    <TextField fx:id="tfEmail" promptText="Email Address"
+                               styleClass="text-field-clean" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox styleClass="field-container" alignment="CENTER_LEFT">
+                    <Label text="🔒" styleClass="field-icon"/>
+                    <Rectangle styleClass="field-divider" width="1.2" height="28"/>
+                    <PasswordField fx:id="pfPassword" promptText="Password"
+                                  styleClass="password-field-clean" HBox.hgrow="ALWAYS"/>
+                </HBox>
+            </VBox>
+
+            <Label text="- Or sign in with -" styleClass="or-text"/>
+            <HBox spacing="12" alignment="CENTER">
+                <Button text="G" styleClass="social-btn"/>
+                <Button text="🍎" styleClass="social-btn"/>
+            </HBox>
+
+            <Button text="Get Started" styleClass="btn-primary" maxWidth="420"
+                    prefWidth="420" onAction="#handleSignUp"/>
+        </VBox>
+
+        <VBox fx:id="signInPane" spacing="16" alignment="CENTER" visible="false" managed="false"
+              AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="60" AnchorPane.rightAnchor="60">
+
+            <Label text="Welcome Back 👋" styleClass="welcome-title"/>
+            <Label text="Sign in to continue to Dashboard" styleClass="welcome-subtitle"/>
+            <VBox spacing="12" maxWidth="420" fillWidth="true">
+                <VBox.margin><Insets top="10"/></VBox.margin>
+
+                <HBox styleClass="field-container" alignment="CENTER_LEFT">
+                    <Label text="👤" styleClass="field-icon"/>
+                    <Rectangle styleClass="field-divider" width="1.2" height="28"/>
+                    <TextField fx:id="tfLoginEmail" promptText="Email / Username"
+                               styleClass="text-field-clean" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox styleClass="field-container" alignment="CENTER_LEFT">
+                    <Label text="🔒" styleClass="field-icon"/>
+                    <Rectangle styleClass="field-divider" width="1.2" height="28"/>
+                    <PasswordField fx:id="pfLoginPassword" promptText="Password"
+                                  styleClass="password-field-clean" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <HBox alignment="CENTER_LEFT" spacing="8">
+                    <CheckBox fx:id="cbRemember"/>
+                    <Label text="Remember me" styleClass="remember-label"/>
+                </HBox>
+            </VBox>
+
+            <Label text="- Or sign in with -" styleClass="or-text"/>
+            <HBox spacing="12" alignment="CENTER">
+                <Button text="G" styleClass="social-btn"/>
+                <Button text="🍎" styleClass="social-btn"/>
+            </HBox>
+
+            <Button text="Get Started" styleClass="btn-primary" maxWidth="420"
+                    prefWidth="420" onAction="#handleSignIn"/>
+
+            <Label text="Forgot Your Password?" styleClass="link-label"
+                   onMouseClicked="#handleForgotPassword"/>
+        </VBox>
+
+    </AnchorPane>
+</HBox>
