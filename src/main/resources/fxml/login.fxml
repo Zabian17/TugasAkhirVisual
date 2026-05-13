@@ -83,12 +83,6 @@
                 </HBox>
             </VBox>
 
-            <Label text="- Or sign in with -" styleClass="or-text"/>
-            <HBox spacing="12" alignment="CENTER">
-                <Button text="G" styleClass="social-btn"/>
-                <Button text="🍎" styleClass="social-btn"/>
-            </HBox>
-
             <Button text="Get Started" styleClass="btn-primary" maxWidth="420"
                     prefWidth="420" onAction="#handleSignUp"/>
         </VBox>
@@ -121,12 +115,6 @@
                     <Label text="Remember me" styleClass="remember-label"/>
                 </HBox>
             </VBox>
-
-            <Label text="- Or sign in with -" styleClass="or-text"/>
-            <HBox spacing="12" alignment="CENTER">
-                <Button text="G" styleClass="social-btn"/>
-                <Button text="🍎" styleClass="social-btn"/>
-            </HBox>
 
             <Button text="Get Started" styleClass="btn-primary" maxWidth="420"
                     prefWidth="420" onAction="#handleSignIn"/>

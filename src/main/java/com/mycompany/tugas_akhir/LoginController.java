@@ -1,13 +1,19 @@
 package com.mycompany.tugas_akhir;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
 public class LoginController implements Initializable {
+
+    private final UserDAO userDAO = new UserDAO();
 
     @FXML private VBox signUpPane;
     @FXML private VBox signInPane;
@@ -57,8 +63,8 @@ public class LoginController implements Initializable {
 
     @FXML
     private void handleSignUp() {
-        String name = tfFullName.getText().trim();
-        String email = tfEmail.getText().trim();
+        String name     = tfFullName.getText().trim();
+        String email    = tfEmail.getText().trim();
         String password = pfPassword.getText();
 
         if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
@@ -66,13 +72,35 @@ public class LoginController implements Initializable {
             return;
         }
 
-        showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Akun berhasil dibuat! Silakan sign in.");
-        showSignIn();
+        if (password.length() < 6) {
+            showAlert(Alert.AlertType.WARNING, "Peringatan", "Password minimal 6 karakter!");
+            return;
+        }
+
+        if (!email.contains("@") || !email.contains(".")) {
+            showAlert(Alert.AlertType.WARNING, "Peringatan", "Format email tidak valid!");
+            return;
+        }
+
+        boolean success = userDAO.register(name, email, password);
+
+        if (success) {
+            showAlert(Alert.AlertType.INFORMATION, "Berhasil",
+                    "Akun berhasil dibuat!\nSilakan sign in dengan email Anda.");
+            // Bersihkan form
+            tfFullName.clear();
+            tfEmail.clear();
+            pfPassword.clear();
+            showSignIn();
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Gagal",
+                    "Email sudah terdaftar atau terjadi kesalahan.\nCoba gunakan email lain.");
+        }
     }
 
     @FXML
     private void handleSignIn() {
-        String email = tfLoginEmail.getText().trim();
+        String email    = tfLoginEmail.getText().trim();
         String password = pfLoginPassword.getText();
 
         if (email.isEmpty() || password.isEmpty()) {
@@ -80,7 +108,38 @@ public class LoginController implements Initializable {
             return;
         }
 
-        showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Login berhasil! Selamat datang, " + email);
+        UserDAO.User user = userDAO.login(email, password);
+
+        if (user != null) {
+            navigateToDashboard(user);
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Login Gagal",
+                    "Email atau password salah.\nSilakan coba lagi.");
+            pfLoginPassword.clear();
+        }
+    }
+
+    private void navigateToDashboard(UserDAO.User user) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/dashboard.fxml")
+            );
+            // Load FXML dulu sebelum ambil controller
+            Scene scene = new Scene(loader.load(), 1200, 720);
+
+            // Kirim data user yang login ke DashboardController
+            DashboardController dashCtrl = loader.getController();
+            dashCtrl.initUser(user);
+
+            Stage stage = (Stage) tfLoginEmail.getScene().getWindow();
+            stage.setTitle("GudangKu - Dashboard");
+            stage.setResizable(true);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Gagal membuka dashboard: " + e.getMessage());
+        }
     }
 
     @FXML

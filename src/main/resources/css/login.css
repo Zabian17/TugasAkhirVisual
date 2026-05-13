@@ -161,33 +161,6 @@
     -fx-prompt-text-fill: #b0b8cc;
 }
 
-.or-text {
-    -fx-text-fill: #aaaaaa;
-    -fx-font-size: 12px;
-}
-
-.social-btn {
-    -fx-background-color: white;
-    -fx-background-radius: 50;
-    -fx-border-color: #d8dde8;
-    -fx-border-radius: 50;
-    -fx-border-width: 1.2;
-    -fx-min-width: 44px;
-    -fx-pref-width: 44px;
-    -fx-max-width: 44px;
-    -fx-min-height: 44px;
-    -fx-pref-height: 44px;
-    -fx-max-height: 44px;
-    -fx-font-size: 15px;
-    -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 4, 0, 0, 1);
-}
-
-.social-btn:hover {
-    -fx-background-color: #f5f5f5;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 6, 0, 0, 2);
-}
-
 .btn-primary {
     -fx-background-color: #1565c0;
     -fx-text-fill: white;
