@@ -1,0 +1,221 @@
+================================================================================
+GIT PUSH INSTRUCTIONS - Branch "update 2.0"
+================================================================================
+
+FOLLOW THESE STEPS TO PUSH CHANGES:
+
+================================================================================
+STEP 1: Navigate to Project Directory
+================================================================================
+
+cd c:\laragon\www\tugas_akhir.worktrees\agents-file-check-and-validation
+
+
+================================================================================
+STEP 2: Check Current Status
+================================================================================
+
+git status
+
+Expected output: Shows all new files and modified files ready to commit
+
+
+================================================================================
+STEP 3: Create New Branch "update 2.0"
+================================================================================
+
+git checkout -b "update 2.0"
+
+Or if you want to push to existing branch:
+git checkout "update 2.0"
+
+
+================================================================================
+STEP 4: Stage All Changes
+================================================================================
+
+git add -A
+
+This will stage all:
+  ✅ New files created
+  ✅ Modified files
+  ✅ Deleted files (if any)
+
+NOTE: PROGRESS.txt will NOT be staged (it's in .gitignore)
+
+
+================================================================================
+STEP 5: Verify Staged Changes
+================================================================================
+
+git status
+
+Should show all files as "Changes to be committed"
+Should NOT show PROGRESS.txt (local only)
+
+
+================================================================================
+STEP 6: Commit Changes
+================================================================================
+
+Commit with message (following repository convention):
+
+git commit -m "feat: Setup & Authentication - Update 2.0" -m "- Added comprehensive documentation (README, SETUP, QUICKSTART)
+- Updated database configuration (gudang_akhir)
+- Fixed authentication system (plaintext mode for testing)
+- Updated pom.xml with BCrypt dependency
+- Modified PasswordHelper for password verification
+- Updated schema.sql with test user account
+- Added debugging and troubleshooting guides
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
+
+
+Or simpler version:
+
+git commit -m "feat(auth): Setup database and authentication system v2.0"
+
+
+================================================================================
+STEP 7: Verify Commit
+================================================================================
+
+git log --oneline -1
+
+Should show your new commit
+
+
+================================================================================
+STEP 8: Push to Remote
+================================================================================
+
+git push -u origin "update 2.0"
+
+This will:
+  ✅ Push branch to remote repository
+  ✅ Set upstream tracking
+  ✅ Make it available for pull requests
+
+
+================================================================================
+STEP 9: Verify Push
+================================================================================
+
+git status
+
+Should show: "Your branch is up to date with 'origin/update 2.0'."
+
+
+================================================================================
+FILES THAT WILL BE COMMITTED
+================================================================================
+
+✅ NEW FILES:
+  - README.md
+  - SETUP.md
+  - QUICKSTART.txt
+  - DATABASE_SETUP_SUMMARY.txt
+  - LOGIN_FIX.md
+  - PLAINTEXT_MODE_TESTING.md
+
+✅ MODIFIED FILES:
+  - pom.xml (added BCrypt dependency)
+  - DatabaseConnection.java (updated DATABASE constant)
+  - PasswordHelper.java (plaintext mode)
+  - schema.sql (database name + test user)
+
+❌ NOT COMMITTED (in .gitignore):
+  - PROGRESS.txt (local only)
+  - target/ (build artifacts)
+  - *.class files
+  - .vscode/
+  - logs/
+
+================================================================================
+WHAT WILL NOT BE TRACKED
+================================================================================
+
+✅ PROGRESS.txt stays LOCAL
+   - Won't appear in git status
+   - Won't be committed
+   - Won't be synced to remote
+   - Perfect for local development notes
+
+================================================================================
+QUICK COMMAND SUMMARY
+================================================================================
+
+# All-in-one approach:
+cd c:\laragon\www\tugas_akhir.worktrees\agents-file-check-and-validation
+git checkout -b "update 2.0"
+git add -A
+git commit -m "feat: Setup database and authentication system v2.0"
+git push -u origin "update 2.0"
+
+# Then create Pull Request on GitHub to merge into main
+
+
+================================================================================
+POST-PUSH VERIFICATION
+================================================================================
+
+1. Check branch created:
+   git branch -a
+
+2. Check remote sync:
+   git remote -v
+
+3. Check log:
+   git log --oneline -5
+
+4. Check file list:
+   git ls-files | grep -E "(README|SETUP|QUICKSTART|PasswordHelper|schema)"
+
+
+================================================================================
+NEXT STEPS AFTER PUSH
+================================================================================
+
+1. ✅ Push to "update 2.0" branch
+2. 🔜 Create Pull Request on GitHub
+3. 🔜 Review changes
+4. 🔜 Merge to main branch
+5. 🔜 Test on main branch
+6. 🔜 Continue development
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Q: Error "branch already exists"
+A: Use: git checkout "update 2.0"
+   (instead of -b to switch to existing branch)
+
+Q: Error "nothing to commit"
+A: Check: git status
+   Ensure files are staged: git add -A
+
+Q: PROGRESS.txt is in staging area
+A: Remove it: git reset PROGRESS.txt
+   It should not be staged (it's in .gitignore)
+
+Q: Push fails with permission error
+A: Check your GitHub credentials
+   Or use: git push -u origin "update 2.0" --force (NOT RECOMMENDED)
+
+Q: Can't create branch
+A: Make sure you're in correct directory
+   And git is initialized: git rev-parse --git-dir
+
+================================================================================
+IMPORTANT NOTES
+================================================================================
+
+⚠️  DO NOT force push unless necessary
+⚠️  DO NOT skip pre-commit hooks
+⚠️  DO NOT commit PROGRESS.txt (it's local only)
+✅ DO review changes before push: git diff --cached
+✅ DO test after push
+✅ DO create PR for code review
+
+================================================================================
