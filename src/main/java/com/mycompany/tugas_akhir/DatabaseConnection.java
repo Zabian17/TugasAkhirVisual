@@ -13,7 +13,7 @@ public class DatabaseConnection {
     // ── Konfigurasi Database ──────────────────────────────────────────────────
     private static final String HOST     = "localhost";
     private static final String PORT     = "3306";
-    private static final String DATABASE = "gudang_s6";
+    private static final String DATABASE = "gudang_akhir";
     private static final String USER     = "root";
     private static final String PASSWORD = "12345";
 

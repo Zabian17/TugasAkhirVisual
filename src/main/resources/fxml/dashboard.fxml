@@ -132,7 +132,7 @@
             </HBox>
 
             <!-- PAGE CONTENT (scrollable) -->
-            <ScrollPane fitToWidth="true" style="-fx-background-color: #f0f2f5; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
+            <ScrollPane fx:id="mainScrollPane" fitToWidth="true" style="-fx-background-color: #f0f2f5; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
                 <content>
                     <VBox styleClass="content-area" spacing="16">
 

@@ -1,0 +1,57 @@
+# 🔐 DATABASE SETUP - QUICK REFERENCE
+
+## Database Credentials
+```
+Host:     localhost:3306
+Database: gudang_akhir
+User:     root
+Password: 12345
+```
+
+## Test Account
+```
+Email:    testuser@example.com
+Password: Testing123
+Role:     user
+```
+
+## Setup Methods
+
+### 1️⃣ phpMyAdmin (Easiest)
+1. Go to http://localhost/phpmyadmin
+2. Login: root / 12345
+3. Click Import → select `schema.sql` → Go
+
+### 2️⃣ MySQL CLI
+```bash
+mysql -u root -p12345 < src/main/resources/sql/schema.sql
+```
+
+### 3️⃣ GUI Tools (HeidiSQL, DBeaver, etc.)
+- Open connection to localhost (root/12345)
+- Run: `src/main/resources/sql/schema.sql`
+
+## Verification
+```sql
+USE gudang_akhir;
+SELECT COUNT(*) FROM users;           -- Should be 1 (test user)
+SELECT COUNT(*) FROM barang;          -- Should be 5
+SELECT COUNT(*) FROM section;         -- Should be 3
+SELECT COUNT(*) FROM rak;             -- Should be 36
+```
+
+## Files Updated
+- ✅ `schema.sql` - Database name changed to `gudang_akhir` + test user added
+- ✅ `DatabaseConnection.java` - Updated DATABASE constant to `gudang_akhir`
+- ✅ `README.md` - Added complete documentation
+- ✅ `SETUP.md` - Detailed setup instructions
+
+## Test Login in App
+1. Run: `mvn javafx:run`
+2. Click "SIGN IN"
+3. Email: `testuser@example.com`
+4. Password: `Testing123`
+5. Click "Get Started"
+
+---
+**Status:** ✅ Ready to Setup

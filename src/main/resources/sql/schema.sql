@@ -1,16 +1,16 @@
 -- ============================================================
 --  GUDANGKU - Database Schema
---  Database : gudang_s6
---  Dibuat   : 13 Mei 2026
+--  Database : gudang_akhir
+--  Dibuat   : 21 Mei 2026
 --  Jalankan file ini di phpMyAdmin atau MySQL CLI
 -- ============================================================
 
 -- Buat database jika belum ada
-CREATE DATABASE IF NOT EXISTS gudang_s6
+CREATE DATABASE IF NOT EXISTS gudang_akhir
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
-USE gudang_s6;
+USE gudang_akhir;
 
 -- ============================================================
 -- TABEL: users
@@ -171,6 +171,14 @@ INSERT IGNORE INTO barang (kode_barang, nama_barang, kategori, satuan, stok, sto
 ('BRG-003', 'Barang C', 'Umum', 'pcs', 150, 20),
 ('BRG-004', 'Barang D', 'Umum', 'pcs', 200, 25),
 ('BRG-005', 'Barang E', 'Umum', 'pcs', 769, 100);
+
+-- ============================================================
+-- TEST USER ACCOUNT
+-- Username: testuser@example.com
+-- Password: Testing123 (plaintext for testing)
+-- ============================================================
+INSERT IGNORE INTO users (full_name, email, password_hash, role) VALUES
+('Test User', 'testuser@example.com', 'Testing123', 'user');
 
 -- ============================================================
 -- CARA PAKAI:
