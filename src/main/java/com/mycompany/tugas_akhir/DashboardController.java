@@ -33,6 +33,12 @@ public class DashboardController implements Initializable {
     @FXML private Label lblBarangMasuk;
     @FXML private Label lblBarangKeluar;
 
+    // --- Content area ---
+    @FXML private ScrollPane mainScrollPane;
+    
+    // --- Current active page ---
+    private String currentPage = "dashboard";
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Set active nav to Dashboard on load
@@ -66,13 +72,16 @@ public class DashboardController implements Initializable {
     private void handleNavDashboard() {
         setActiveNav("dashboard");
         pageTitleLabel.setText("Dashboard");
+        currentPage = "dashboard";
+        loadDashboardPage();
     }
 
     @FXML
     private void handleNavStorage() {
         setActiveNav("storage");
         pageTitleLabel.setText("Storage");
-        showComingSoon("Storage");
+        currentPage = "storage";
+        loadStoragePage();
     }
 
     @FXML
@@ -193,6 +202,36 @@ public class DashboardController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
             showInfo("Error", "Gagal kembali ke halaman login: " + e.getMessage());
+        }
+    }
+
+    // ============================================================
+    // PAGE LOADING
+    // ============================================================
+
+    private void loadStoragePage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/storage.fxml")
+            );
+            VBox storagePage = loader.load();
+            mainScrollPane.setContent(storagePage);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showInfo("Error", "Gagal load halaman Storage: " + e.getMessage());
+        }
+    }
+
+    private void loadDashboardPage() {
+        try {
+            // Reload dashboard content dari FXML
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/dashboard.fxml")
+            );
+            // Untuk sekarang, biarkan dashboard tetap sebagai default
+            mainScrollPane.getStyleClass().clear();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

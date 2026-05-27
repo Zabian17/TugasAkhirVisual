@@ -60,10 +60,12 @@
                 <TableColumn fx:id="colKode"     text="Kode"        prefWidth="110" minWidth="90"/>
                 <TableColumn fx:id="colNama"     text="Nama Barang" prefWidth="220" minWidth="150"/>
                 <TableColumn fx:id="colKategori" text="Kategori"    prefWidth="130" minWidth="100"/>
-                <TableColumn fx:id="colSatuan"   text="Satuan"      prefWidth="80"  minWidth="60"/>
-                <TableColumn fx:id="colStok"     text="Stok"        prefWidth="80"  minWidth="60"/>
-                <TableColumn fx:id="colStokMin"  text="Min. Stok"   prefWidth="90"  minWidth="70"/>
-                <TableColumn fx:id="colStatus"   text="Status"      prefWidth="110" minWidth="85"/>
+                <TableColumn fx:id="colLokasi"   text="Lokasi"      prefWidth="120" minWidth="90"/>
+                <TableColumn fx:id="colStok"     text="Qty"         prefWidth="70"  minWidth="60"/>
+                <TableColumn fx:id="colStokMin"  text="Min"         prefWidth="70"  minWidth="60"/>
+                <TableColumn fx:id="colStokMax"  text="Max"         prefWidth="70"  minWidth="60"/>
+                <TableColumn fx:id="colStatus"   text="Status"      prefWidth="120" minWidth="100"/>
+                <TableColumn fx:id="colLastUpdate" text="Last Update" prefWidth="130" minWidth="110"/>
                 <TableColumn fx:id="colAksi"     text="Aksi"        prefWidth="150" minWidth="130"/>
             </columns>
             <placeholder>

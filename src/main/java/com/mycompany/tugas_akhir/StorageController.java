@@ -34,10 +34,12 @@ public class StorageController implements Initializable {
     @FXML private TableColumn<BarangDAO.Barang, String>   colKode;
     @FXML private TableColumn<BarangDAO.Barang, String>   colNama;
     @FXML private TableColumn<BarangDAO.Barang, String>   colKategori;
-    @FXML private TableColumn<BarangDAO.Barang, String>   colSatuan;
     @FXML private TableColumn<BarangDAO.Barang, Number>   colStok;
     @FXML private TableColumn<BarangDAO.Barang, Number>   colStokMin;
+    @FXML private TableColumn<BarangDAO.Barang, Number>   colStokMax;
+    @FXML private TableColumn<BarangDAO.Barang, String>   colLokasi;
     @FXML private TableColumn<BarangDAO.Barang, String>   colStatus;
+    @FXML private TableColumn<BarangDAO.Barang, String>   colLastUpdate;
     @FXML private TableColumn<BarangDAO.Barang, Void>     colAksi;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
@@ -57,11 +59,12 @@ public class StorageController implements Initializable {
         colKode.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().kodeBarang));
         colNama.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().namaBarang));
         colKategori.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().kategori));
-        colSatuan.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().satuan));
         colStok.setCellValueFactory(d -> new SimpleIntegerProperty(d.getValue().stok));
         colStokMin.setCellValueFactory(d -> new SimpleIntegerProperty(d.getValue().stokMin));
+        colStokMax.setCellValueFactory(d -> new SimpleIntegerProperty(d.getValue().stokMax));
+        colLokasi.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().lokasi));
 
-        // Stok – merah jika di bawah minimum
+        // Stok – warna berbeda berdasarkan status
         colStok.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Number n, boolean empty) {
@@ -69,19 +72,21 @@ public class StorageController implements Initializable {
                 if (empty || n == null) { setText(null); setStyle(""); return; }
                 BarangDAO.Barang b = getTableView().getItems().get(getIndex());
                 setText(n.toString());
-                setStyle(b.stok < b.stokMin
-                    ? "-fx-text-fill: #ef4444; -fx-font-weight: bold;"
-                    : "-fx-text-fill: #374151;");
+                if (b.stok <= 0)
+                    setStyle("-fx-text-fill: #ef4444; -fx-font-weight: bold;");
+                else if (b.stok < b.stokMin)
+                    setStyle("-fx-text-fill: #f59e0b; -fx-font-weight: bold;");
+                else
+                    setStyle("-fx-text-fill: #374151;");
             }
         });
 
-        // Kolom Status dengan badge berwarna
+        // Kolom Status dengan 3 kategori: In Stock, Low Stock, No Stock
         colStatus.setCellValueFactory(d -> {
             BarangDAO.Barang b = d.getValue();
-            if (b.stok <= 0)            return new SimpleStringProperty("Habis");
-            if (b.stok < b.stokMin)     return new SimpleStringProperty("Kritis");
-            if (b.stok < b.stokMin * 2) return new SimpleStringProperty("Rendah");
-            return new SimpleStringProperty("Aman");
+            if (b.stok <= 0)                return new SimpleStringProperty("No Stock");
+            if (b.stok < b.stokMin)         return new SimpleStringProperty("Low Stock");
+            return new SimpleStringProperty("In Stock");
         });
         colStatus.setCellFactory(col -> new TableCell<>() {
             @Override
@@ -91,13 +96,20 @@ public class StorageController implements Initializable {
                 Label badge = new Label(s);
                 badge.getStyleClass().setAll("badge",
                     switch (s) {
-                        case "Habis", "Kritis" -> "badge-danger";
-                        case "Rendah"          -> "badge-warn";
-                        default                -> "badge-ok";
+                        case "No Stock"  -> "badge-danger";
+                        case "Low Stock" -> "badge-warn";
+                        default          -> "badge-ok";
                     });
                 setGraphic(badge);
                 setText(null);
             }
+        });
+
+        // Last Update - format timestamp
+        colLastUpdate.setCellValueFactory(d -> {
+            long timestamp = d.getValue().lastUpdate;
+            String formatted = formatLastUpdate(timestamp);
+            return new SimpleStringProperty(formatted);
         });
 
         // Kolom Aksi – tombol Edit dan Hapus
@@ -288,5 +300,25 @@ public class StorageController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    // ── Format Last Update Time ────────────────────────────────────────────────
+    private String formatLastUpdate(long timestamp) {
+        if (timestamp == 0) return "-";
+        long now = System.currentTimeMillis();
+        long diffMs = now - timestamp;
+        long diffSec = diffMs / 1000;
+        long diffMin = diffSec / 60;
+        long diffHour = diffMin / 60;
+        long diffDay = diffHour / 24;
+
+        if (diffSec < 60) return "Just now";
+        if (diffMin < 60) return diffMin + " min ago";
+        if (diffHour < 24) return diffHour + " h ago";
+        if (diffDay < 7) return diffDay + " d ago";
+        
+        java.time.LocalDateTime ldt = java.time.LocalDateTime
+            .ofInstant(java.time.Instant.ofEpochMilli(timestamp), java.time.ZoneId.systemDefault());
+        return ldt.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy"));
     }
 }

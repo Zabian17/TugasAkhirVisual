@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS barang (
     satuan      VARCHAR(20)   DEFAULT 'pcs',
     stok        INT           DEFAULT 0,
     stok_min    INT           DEFAULT 0,   -- alert jika stok di bawah ini
+    stok_max    INT           DEFAULT 0,   -- kapasitas maksimal
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -165,12 +166,12 @@ INSERT IGNORE INTO supplier (nama_supplier, kontak, email) VALUES
 ('PT. Empat', '08444444444', 'empat@example.com');
 
 -- Barang sample
-INSERT IGNORE INTO barang (kode_barang, nama_barang, kategori, satuan, stok, stok_min) VALUES
-('BRG-001', 'Barang A', 'Umum', 'pcs', 500, 50),
-('BRG-002', 'Barang B', 'Umum', 'pcs', 300, 30),
-('BRG-003', 'Barang C', 'Umum', 'pcs', 150, 20),
-('BRG-004', 'Barang D', 'Umum', 'pcs', 200, 25),
-('BRG-005', 'Barang E', 'Umum', 'pcs', 769, 100);
+INSERT IGNORE INTO barang (kode_barang, nama_barang, kategori, satuan, stok, stok_min, stok_max) VALUES
+('BRG-001', 'Barang A', 'Umum', 'pcs', 500, 50, 100),
+('BRG-002', 'Barang B', 'Umum', 'pcs', 300, 30, 60),
+('BRG-003', 'Barang C', 'Umum', 'pcs', 150, 20, 40),
+('BRG-004', 'Barang D', 'Umum', 'pcs', 200, 25, 50),
+('BRG-005', 'Barang E', 'Umum', 'pcs', 769, 100, 200);
 
 -- ============================================================
 -- TEST USER ACCOUNT
