@@ -88,7 +88,8 @@ public class DashboardController implements Initializable {
     private void handleNavMovements() {
         setActiveNav("movements");
         pageTitleLabel.setText("Movements");
-        showComingSoon("Movements");
+        currentPage = "movements";
+        loadMovementsPage();
     }
 
     @FXML
@@ -219,6 +220,26 @@ public class DashboardController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
             showInfo("Error", "Gagal load halaman Storage: " + e.getMessage());
+        }
+    }
+
+    private void loadMovementsPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/movements.fxml")
+            );
+            VBox movementsPage = loader.load();
+            
+            // Pass current user to MovementsController
+            MovementsController controller = loader.getController();
+            if (controller != null && currentUser != null) {
+                controller.initUser(currentUser);
+            }
+            
+            mainScrollPane.setContent(movementsPage);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showInfo("Error", "Gagal load halaman Movements: " + e.getMessage());
         }
     }
 
