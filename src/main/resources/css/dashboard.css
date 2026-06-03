@@ -399,9 +399,159 @@
 /* ============================================================
    DIVIDER
    ============================================================ */
+/* ============================================================
+    DIVIDER
+    ============================================================ */
 .sidebar-divider {
     -fx-background-color: #f0f2f5;
     -fx-pref-height: 1px;
     -fx-min-height: 1px;
     -fx-max-height: 1px;
+}
+
+/* ============================================================
+    STORAGE PAGE - STATS & SECTIONS
+    ============================================================ */
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 16 18 16 18;
+    -fx-border-color: #f0f2f5;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 6, 0, 0, 2);
+}
+
+.stat-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0, 0, 3);
+}
+
+.section-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 16 18 16 18;
+    -fx-border-color: #f0f2f5;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 6, 0, 0, 2);
+}
+
+.section-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0, 0, 3);
+}
+
+/* ============================================================
+    STORAGE PAGE - BUTTONS
+    ============================================================ */
+.btn-primary-small {
+    -fx-background-color: #3b82f6;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 16 6 16;
+    -fx-cursor: hand;
+}
+
+.btn-primary-small:hover {
+    -fx-background-color: #2563eb;
+}
+
+.btn-outline-small {
+    -fx-background-color: transparent;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 12 6 12;
+    -fx-cursor: hand;
+}
+
+.btn-outline-small:hover {
+    -fx-border-color: #d1d5db;
+    -fx-background-color: #f9fafb;
+}
+
+/* ============================================================
+    STORAGE PAGE - FILTER SECTION
+    ============================================================ */
+.search-box {
+    -fx-background-color: #f9fafb;
+    -fx-background-radius: 8;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-text-fill: #1f2937;
+    -fx-font-size: 12px;
+    -fx-padding: 8 12 8 12;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.search-box:focused {
+    -fx-border-color: #3b82f6;
+    -fx-background-color: #ffffff;
+}
+
+.filter-combo {
+    -fx-background-color: #f9fafb;
+    -fx-background-radius: 8;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 12px;
+    -fx-padding: 8 12 8 12;
+}
+
+.filter-combo:focused {
+    -fx-border-color: #3b82f6;
+    -fx-background-color: #ffffff;
+}
+
+/* ============================================================
+    STORAGE PAGE - DATA TABLE
+    ============================================================ */
+.data-table {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.data-table .column-header {
+    -fx-background-color: #f9fafb;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 12 12 12 12;
+}
+
+.data-table .column-header-background {
+    -fx-background-color: #f9fafb;
+}
+
+.data-table .column-header .label {
+    -fx-text-fill: #6b7280;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-transform: uppercase;
+}
+
+.data-table .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 12 0 12 0;
+    -fx-text-fill: #1f2937;
+    -fx-font-size: 12px;
+}
+
+.data-table .table-row-cell:hover {
+    -fx-background-color: #f9fafb;
+}
+
+.data-table .table-cell {
+    -fx-padding: 0 12 0 12;
+    -fx-text-fill: #374151;
+    -fx-font-size: 12px;
 }

@@ -33,6 +33,12 @@ public class DashboardController implements Initializable {
     @FXML private Label lblBarangMasuk;
     @FXML private Label lblBarangKeluar;
 
+    // --- Content area ---
+    @FXML private ScrollPane mainScrollPane;
+    
+    // --- Current active page ---
+    private String currentPage = "dashboard";
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Set active nav to Dashboard on load
@@ -66,20 +72,24 @@ public class DashboardController implements Initializable {
     private void handleNavDashboard() {
         setActiveNav("dashboard");
         pageTitleLabel.setText("Dashboard");
+        currentPage = "dashboard";
+        loadDashboardPage();
     }
 
     @FXML
     private void handleNavStorage() {
         setActiveNav("storage");
         pageTitleLabel.setText("Storage");
-        showComingSoon("Storage");
+        currentPage = "storage";
+        loadStoragePage();
     }
 
     @FXML
     private void handleNavMovements() {
         setActiveNav("movements");
         pageTitleLabel.setText("Movements");
-        showComingSoon("Movements");
+        currentPage = "movements";
+        loadMovementsPage();
     }
 
     @FXML
@@ -193,6 +203,56 @@ public class DashboardController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
             showInfo("Error", "Gagal kembali ke halaman login: " + e.getMessage());
+        }
+    }
+
+    // ============================================================
+    // PAGE LOADING
+    // ============================================================
+
+    private void loadStoragePage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/storage.fxml")
+            );
+            VBox storagePage = loader.load();
+            mainScrollPane.setContent(storagePage);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showInfo("Error", "Gagal load halaman Storage: " + e.getMessage());
+        }
+    }
+
+    private void loadMovementsPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/movements.fxml")
+            );
+            VBox movementsPage = loader.load();
+            
+            // Pass current user to MovementsController
+            MovementsController controller = loader.getController();
+            if (controller != null && currentUser != null) {
+                controller.initUser(currentUser);
+            }
+            
+            mainScrollPane.setContent(movementsPage);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showInfo("Error", "Gagal load halaman Movements: " + e.getMessage());
+        }
+    }
+
+    private void loadDashboardPage() {
+        try {
+            // Reload dashboard content dari FXML
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/dashboard.fxml")
+            );
+            // Untuk sekarang, biarkan dashboard tetap sebagai default
+            mainScrollPane.getStyleClass().clear();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

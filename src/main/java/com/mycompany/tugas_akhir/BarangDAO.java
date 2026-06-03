@@ -19,9 +19,13 @@ public class BarangDAO {
         public String satuan;
         public int    stok;
         public int    stokMin;
+        public int    stokMax;
+        public String lokasi;
+        public long   lastUpdate;
 
         public Barang(int id, String kodeBarang, String namaBarang,
-                      String kategori, String satuan, int stok, int stokMin) {
+                      String kategori, String satuan, int stok, int stokMin, 
+                      int stokMax, String lokasi, long lastUpdate) {
             this.id         = id;
             this.kodeBarang = kodeBarang;
             this.namaBarang = namaBarang;
@@ -29,6 +33,9 @@ public class BarangDAO {
             this.satuan     = satuan;
             this.stok       = stok;
             this.stokMin    = stokMin;
+            this.stokMax    = stokMax;
+            this.lokasi     = lokasi;
+            this.lastUpdate = lastUpdate;
         }
 
         @Override
@@ -40,8 +47,15 @@ public class BarangDAO {
     // ── Ambil semua barang ────────────────────────────────────────────────────
     public List<Barang> getAllBarang() {
         List<Barang> list = new ArrayList<>();
-        String sql = "SELECT id, kode_barang, nama_barang, kategori, satuan, stok, stok_min "
-                   + "FROM barang ORDER BY id";
+        String sql = "SELECT b.id, b.kode_barang, b.nama_barang, b.kategori, b.satuan, b.stok, b.stok_min, " +
+                     "COALESCE(b.stok_max, b.stok_min * 2) as stok_max, " +
+                     "GROUP_CONCAT(DISTINCT r.kode_rak SEPARATOR ', ') as lokasi, " +
+                     "UNIX_TIMESTAMP(b.updated_at) as last_update " +
+                     "FROM barang b " +
+                     "LEFT JOIN transaksi t ON b.id = t.barang_id " +
+                     "LEFT JOIN rak r ON t.rak_id = r.id " +
+                     "GROUP BY b.id " +
+                     "ORDER BY b.id";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -55,9 +69,16 @@ public class BarangDAO {
     // ── Search barang ─────────────────────────────────────────────────────────
     public List<Barang> searchBarang(String keyword) {
         List<Barang> list = new ArrayList<>();
-        String sql = "SELECT id, kode_barang, nama_barang, kategori, satuan, stok, stok_min "
-                   + "FROM barang WHERE nama_barang LIKE ? OR kode_barang LIKE ? OR kategori LIKE ? "
-                   + "ORDER BY id";
+        String sql = "SELECT b.id, b.kode_barang, b.nama_barang, b.kategori, b.satuan, b.stok, b.stok_min, " +
+                     "COALESCE(b.stok_max, b.stok_min * 2) as stok_max, " +
+                     "GROUP_CONCAT(DISTINCT r.kode_rak SEPARATOR ', ') as lokasi, " +
+                     "UNIX_TIMESTAMP(b.updated_at) as last_update " +
+                     "FROM barang b " +
+                     "LEFT JOIN transaksi t ON b.id = t.barang_id " +
+                     "LEFT JOIN rak r ON t.rak_id = r.id " +
+                     "WHERE b.nama_barang LIKE ? OR b.kode_barang LIKE ? OR b.kategori LIKE ? " +
+                     "GROUP BY b.id " +
+                     "ORDER BY b.id";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             String like = "%" + keyword + "%";
@@ -75,8 +96,8 @@ public class BarangDAO {
     // ── Tambah barang baru ────────────────────────────────────────────────────
     public boolean addBarang(String kode, String nama, String kategori,
                              String satuan, int stok, int stokMin) {
-        String sql = "INSERT INTO barang (kode_barang, nama_barang, kategori, satuan, stok, stok_min) "
-                   + "VALUES (?,?,?,?,?,?)";
+        String sql = "INSERT INTO barang (kode_barang, nama_barang, kategori, satuan, stok, stok_min, stok_max) "
+                   + "VALUES (?,?,?,?,?,?,?)";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, kode);
@@ -85,6 +106,7 @@ public class BarangDAO {
             ps.setString(4, satuan);
             ps.setInt(5, stok);
             ps.setInt(6, stokMin);
+            ps.setInt(7, stokMin * 2);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("[BarangDAO] addBarang: " + e.getMessage());
@@ -96,7 +118,7 @@ public class BarangDAO {
     public boolean updateBarang(int id, String nama, String kategori,
                                 String satuan, int stok, int stokMin) {
         String sql = "UPDATE barang SET nama_barang=?, kategori=?, satuan=?, "
-                   + "stok=?, stok_min=? WHERE id=?";
+                   + "stok=?, stok_min=?, stok_max=? WHERE id=?";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, nama);
@@ -104,7 +126,8 @@ public class BarangDAO {
             ps.setString(3, satuan);
             ps.setInt(4, stok);
             ps.setInt(5, stokMin);
-            ps.setInt(6, id);
+            ps.setInt(6, stokMin * 2);
+            ps.setInt(7, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("[BarangDAO] updateBarang: " + e.getMessage());
@@ -148,7 +171,10 @@ public class BarangDAO {
             rs.getString("kategori") != null ? rs.getString("kategori") : "-",
             rs.getString("satuan"),
             rs.getInt("stok"),
-            rs.getInt("stok_min")
+            rs.getInt("stok_min"),
+            rs.getInt("stok_max"),
+            rs.getString("lokasi") != null ? rs.getString("lokasi") : "-",
+            rs.getLong("last_update") * 1000
         );
     }
 }

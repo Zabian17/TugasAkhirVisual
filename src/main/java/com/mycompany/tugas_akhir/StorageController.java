@@ -13,6 +13,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 
 /**
  * Controller untuk halaman Storage (Manajemen Barang).
@@ -25,43 +26,72 @@ public class StorageController implements Initializable {
 
     // ── FXML Refs ─────────────────────────────────────────────────────────────
     @FXML private TextField  searchField;
+    @FXML private ComboBox<String> comboFilter1;
+    @FXML private ComboBox<String> comboStatusFilter;
+    @FXML private ComboBox<String> comboCategoryFilter;
+    
     @FXML private Label      lblTotalBarang;
+    @FXML private Label      lblStokSehat;
     @FXML private Label      lblStokRendah;
     @FXML private Label      lblStokHabis;
 
     @FXML private TableView<BarangDAO.Barang>             tableBarang;
     @FXML private TableColumn<BarangDAO.Barang, Number>   colNo;
     @FXML private TableColumn<BarangDAO.Barang, String>   colKode;
-    @FXML private TableColumn<BarangDAO.Barang, String>   colNama;
     @FXML private TableColumn<BarangDAO.Barang, String>   colKategori;
-    @FXML private TableColumn<BarangDAO.Barang, String>   colSatuan;
+    @FXML private TableColumn<BarangDAO.Barang, String>   colLokasi;
     @FXML private TableColumn<BarangDAO.Barang, Number>   colStok;
-    @FXML private TableColumn<BarangDAO.Barang, Number>   colStokMin;
+    @FXML private TableColumn<BarangDAO.Barang, String>   colStokMin;
     @FXML private TableColumn<BarangDAO.Barang, String>   colStatus;
-    @FXML private TableColumn<BarangDAO.Barang, Void>     colAksi;
+    @FXML private TableColumn<BarangDAO.Barang, String>   colLastUpdate;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        initializeFilters();
         setupColumns();
         loadData();
     }
+    
+    private void initializeFilters() {
+        comboFilter1.setItems(FXCollections.observableArrayList("All"));
+        comboFilter1.setValue("All");
+        
+        comboStatusFilter.setItems(FXCollections.observableArrayList(
+            "All status", "In Stock", "Low Stock", "No Stock"));
+        comboStatusFilter.setValue("All status");
+        
+        comboCategoryFilter.setItems(FXCollections.observableArrayList("All categories"));
+        comboCategoryFilter.setValue("All categories");
+    }
 
-    // ── Setup Kolom ───────────────────────────────────────────────────────────
     private void setupColumns() {
         // Nomor urut
         colNo.setCellValueFactory(data ->
             new SimpleIntegerProperty(tableBarang.getItems().indexOf(data.getValue()) + 1));
         colNo.setSortable(false);
 
-        colKode.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().kodeBarang));
-        colNama.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().namaBarang));
-        colKategori.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().kategori));
-        colSatuan.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().satuan));
-        colStok.setCellValueFactory(d -> new SimpleIntegerProperty(d.getValue().stok));
-        colStokMin.setCellValueFactory(d -> new SimpleIntegerProperty(d.getValue().stokMin));
+        // Kode + Nama dalam satu kolom
+        colKode.setCellValueFactory(d -> new SimpleStringProperty(
+            d.getValue().kodeBarang + " • " + d.getValue().namaBarang));
 
-        // Stok – merah jika di bawah minimum
+        colKategori.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().kategori));
+        colKategori.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String s, boolean empty) {
+                super.updateItem(s, empty);
+                if (empty || s == null) { setGraphic(null); return; }
+                Label badge = new Label(s);
+                badge.getStyleClass().setAll("badge", "badge-info");
+                badge.setStyle("-fx-padding: 4 8 4 8; -fx-font-size: 11px;");
+                setGraphic(badge);
+                setText(null);
+            }
+        });
+
+        colLokasi.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().lokasi));
+
+        colStok.setCellValueFactory(d -> new SimpleIntegerProperty(d.getValue().stok));
         colStok.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Number n, boolean empty) {
@@ -69,19 +99,25 @@ public class StorageController implements Initializable {
                 if (empty || n == null) { setText(null); setStyle(""); return; }
                 BarangDAO.Barang b = getTableView().getItems().get(getIndex());
                 setText(n.toString());
-                setStyle(b.stok < b.stokMin
-                    ? "-fx-text-fill: #ef4444; -fx-font-weight: bold;"
-                    : "-fx-text-fill: #374151;");
+                if (b.stok <= 0)
+                    setStyle("-fx-text-fill: #ef4444; -fx-font-weight: bold;");
+                else if (b.stok < b.stokMin)
+                    setStyle("-fx-text-fill: #f59e0b; -fx-font-weight: bold;");
+                else
+                    setStyle("-fx-text-fill: #10b981;");
             }
         });
 
-        // Kolom Status dengan badge berwarna
+        // Min / Max dalam satu kolom
+        colStokMin.setCellValueFactory(d -> new SimpleStringProperty(
+            d.getValue().stokMin + " / " + d.getValue().stokMax));
+
+        // Kolom Status dengan 3 kategori: In Stock, Low Stock, No Stock
         colStatus.setCellValueFactory(d -> {
             BarangDAO.Barang b = d.getValue();
-            if (b.stok <= 0)            return new SimpleStringProperty("Habis");
-            if (b.stok < b.stokMin)     return new SimpleStringProperty("Kritis");
-            if (b.stok < b.stokMin * 2) return new SimpleStringProperty("Rendah");
-            return new SimpleStringProperty("Aman");
+            if (b.stok <= 0)                return new SimpleStringProperty("No Stock");
+            if (b.stok < b.stokMin)         return new SimpleStringProperty("Low Stock");
+            return new SimpleStringProperty("In Stock");
         });
         colStatus.setCellFactory(col -> new TableCell<>() {
             @Override
@@ -91,32 +127,20 @@ public class StorageController implements Initializable {
                 Label badge = new Label(s);
                 badge.getStyleClass().setAll("badge",
                     switch (s) {
-                        case "Habis", "Kritis" -> "badge-danger";
-                        case "Rendah"          -> "badge-warn";
-                        default                -> "badge-ok";
+                        case "No Stock"  -> "badge-danger";
+                        case "Low Stock" -> "badge-warn";
+                        default          -> "badge-ok";
                     });
                 setGraphic(badge);
                 setText(null);
             }
         });
 
-        // Kolom Aksi – tombol Edit dan Hapus
-        colAksi.setCellFactory(col -> new TableCell<>() {
-            private final Button btnEdit = new Button("✏ Edit");
-            private final Button btnDel  = new Button("🗑 Hapus");
-            private final HBox   box     = new HBox(6, btnEdit, btnDel);
-            {
-                btnEdit.getStyleClass().addAll("btn-small");
-                btnDel.getStyleClass().addAll("btn-small", "btn-danger-small");
-                box.setAlignment(Pos.CENTER_LEFT);
-                btnEdit.setOnAction(e -> showBarangDialog(getTableView().getItems().get(getIndex())));
-                btnDel.setOnAction(e  -> handleDelete(getTableView().getItems().get(getIndex())));
-            }
-            @Override
-            protected void updateItem(Void v, boolean empty) {
-                super.updateItem(v, empty);
-                setGraphic(empty ? null : box);
-            }
+        // Last Update - format timestamp
+        colLastUpdate.setCellValueFactory(d -> {
+            long timestamp = d.getValue().lastUpdate;
+            String formatted = formatLastUpdate(timestamp);
+            return new SimpleStringProperty(formatted);
         });
 
         tableBarang.setItems(barangList);
@@ -130,11 +154,13 @@ public class StorageController implements Initializable {
 
     private void updateStats() {
         long total  = barangList.size();
-        long habis  = barangList.stream().filter(b -> b.stok <= 0).count();
+        long sehat  = barangList.stream().filter(b -> b.stok > 0 && b.stok >= b.stokMin).count();
         long rendah = barangList.stream().filter(b -> b.stok > 0 && b.stok < b.stokMin).count();
+        long habis  = barangList.stream().filter(b -> b.stok <= 0).count();
         lblTotalBarang.setText(String.valueOf(total));
-        lblStokHabis.setText(String.valueOf(habis));
+        lblStokSehat.setText(String.valueOf(sehat));
         lblStokRendah.setText(String.valueOf(rendah));
+        lblStokHabis.setText(String.valueOf(habis));
     }
 
     // ── FXML Handlers ─────────────────────────────────────────────────────────
@@ -154,6 +180,93 @@ public class StorageController implements Initializable {
     private void handleRefresh() {
         searchField.clear();
         loadData();
+    }
+
+    @FXML
+    private void handleExport() {
+        if (barangList.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Export Gagal", "Tidak ada data barang untuk diekspor.");
+            return;
+        }
+        
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Simpan File PDF");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        fileChooser.setInitialFileName("Inventory_" + System.currentTimeMillis() + ".pdf");
+        
+        java.io.File selectedFile = fileChooser.showSaveDialog(tableBarang.getScene().getWindow());
+        if (selectedFile != null) {
+            try {
+                exportToPDF(selectedFile);
+                showAlert(Alert.AlertType.INFORMATION, "Berhasil", 
+                    "File PDF berhasil disimpan di:\n" + selectedFile.getAbsolutePath());
+            } catch (Exception e) {
+                showAlert(Alert.AlertType.ERROR, "Error Export", 
+                    "Gagal mengekspor ke PDF:\n" + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void exportToPDF(java.io.File file) throws Exception {
+        com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter(file);
+        com.itextpdf.kernel.pdf.PdfDocument pdfDoc = new com.itextpdf.kernel.pdf.PdfDocument(writer);
+        com.itextpdf.layout.Document document = new com.itextpdf.layout.Document(pdfDoc);
+        
+        // Header
+        com.itextpdf.layout.element.Paragraph title = new com.itextpdf.layout.element.Paragraph("Laporan Inventaris Barang")
+            .setFontSize(18)
+            .setBold()
+            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER);
+        document.add(title);
+        
+        com.itextpdf.layout.element.Paragraph date = new com.itextpdf.layout.element.Paragraph(
+            "Tanggal: " + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss")))
+            .setFontSize(10)
+            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
+            .setMarginBottom(12);
+        document.add(date);
+        
+        // Stats
+        long sehat = barangList.stream().filter(b -> b.stok > 0 && b.stok >= b.stokMin).count();
+        long rendah = barangList.stream().filter(b -> b.stok > 0 && b.stok < b.stokMin).count();
+        long habis = barangList.stream().filter(b -> b.stok <= 0).count();
+        
+        com.itextpdf.layout.element.Paragraph stats = new com.itextpdf.layout.element.Paragraph(
+            "Total Barang: " + barangList.size() + " | In Stock: " + sehat + " | Low Stock: " + rendah + " | Out of Stock: " + habis)
+            .setFontSize(10)
+            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
+            .setMarginBottom(16);
+        document.add(stats);
+        
+        // Table
+        com.itextpdf.layout.element.Table table = new com.itextpdf.layout.element.Table(
+            new float[]{30, 120, 100, 80, 60, 60, 80, 90});
+        table.setWidth(com.itextpdf.layout.properties.UnitValue.createPercentValue(100));
+        
+        // Header cells
+        String[] headers = {"#", "ITEM / SKU", "CATEGORY", "LOCATION", "QTY", "MIN/MAX", "STATUS", "LAST UPDATE"};
+        for (String h : headers) {
+            table.addHeaderCell(h).setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER);
+        }
+        
+        // Data rows
+        int no = 1;
+        for (BarangDAO.Barang b : barangList) {
+            String status = b.stok <= 0 ? "No Stock" : (b.stok < b.stokMin ? "Low Stock" : "In Stock");
+            
+            table.addCell(String.valueOf(no++));
+            table.addCell(b.kodeBarang + " • " + b.namaBarang);
+            table.addCell(b.kategori);
+            table.addCell(b.lokasi);
+            table.addCell(String.valueOf(b.stok));
+            table.addCell(b.stokMin + " / " + b.stokMax);
+            table.addCell(status);
+            table.addCell(formatLastUpdate(b.lastUpdate));
+        }
+        
+        document.add(table);
+        document.close();
     }
 
     private void handleDelete(BarangDAO.Barang b) {
@@ -288,5 +401,25 @@ public class StorageController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    // ── Format Last Update Time ────────────────────────────────────────────────
+    private String formatLastUpdate(long timestamp) {
+        if (timestamp == 0) return "-";
+        long now = System.currentTimeMillis();
+        long diffMs = now - timestamp;
+        long diffSec = diffMs / 1000;
+        long diffMin = diffSec / 60;
+        long diffHour = diffMin / 60;
+        long diffDay = diffHour / 24;
+
+        if (diffSec < 60) return "Just now";
+        if (diffMin < 60) return diffMin + " min ago";
+        if (diffHour < 24) return diffHour + " h ago";
+        if (diffDay < 7) return diffDay + " d ago";
+        
+        java.time.LocalDateTime ldt = java.time.LocalDateTime
+            .ofInstant(java.time.Instant.ofEpochMilli(timestamp), java.time.ZoneId.systemDefault());
+        return ldt.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy"));
     }
 }
