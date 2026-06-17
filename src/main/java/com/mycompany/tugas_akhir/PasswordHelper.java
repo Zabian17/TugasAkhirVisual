@@ -1,10 +1,9 @@
 package com.mycompany.tugas_akhir;
 
 /**
- * Utility class untuk hashing dan verifikasi password.
- * Sementara menggunakan plaintext (untuk testing/debugging).
- * 
- * TODO: Implementasi BCrypt untuk production.
+ * Utility class untuk hashing dan verifikasi password menggunakan plaintext.
+ * Sementara menggunakan plaintext untuk testing/debugging.
+ * TODO: Implementasi BCrypt untuk production (dependency sudah tersedia via at.favre.lib:bcrypt).
  */
 public class PasswordHelper {
 

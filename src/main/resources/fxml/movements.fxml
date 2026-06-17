@@ -113,6 +113,7 @@
                     <TableColumn fx:id="colAllTipeTx"     text="Tipe"           prefWidth="75"  minWidth="65"/>
                     <TableColumn fx:id="colAllNamaBarang" text="Barang"         prefWidth="120" minWidth="100"/>
                     <TableColumn fx:id="colAllSupplierTx" text="Supplier/Info"   prefWidth="110" minWidth="90"/>
+                    <TableColumn fx:id="colAllAlasan"     text="Alasan"        prefWidth="120" minWidth="100"/>
                     <TableColumn fx:id="colAllJumlahTx"   text="Jumlah"         prefWidth="75"  minWidth="60"/>
                     <TableColumn fx:id="colAllTanggal"    text="Tanggal"        prefWidth="135" minWidth="115"/>
                 </columns>
@@ -203,6 +204,7 @@
                         <TableColumn fx:id="colStockInKodeTx"     text="Kode Transaksi" prefWidth="110" minWidth="90"/>
                         <TableColumn fx:id="colStockInNamaBarang" text="Barang"         prefWidth="140" minWidth="120"/>
                         <TableColumn fx:id="colStockInSupplier"   text="Supplier"       prefWidth="130" minWidth="110"/>
+                        <TableColumn fx:id="colStockInAlasan"     text="Alasan"         prefWidth="120" minWidth="100"/>
                         <TableColumn fx:id="colStockInJumlah"     text="Jumlah"         prefWidth="80"  minWidth="70"/>
                         <TableColumn fx:id="colStockInTanggal"    text="Tanggal"        prefWidth="140" minWidth="120"/>
                     </columns>
@@ -294,6 +296,7 @@
                         <TableColumn fx:id="colStockOutKodeTx"     text="Kode Transaksi" prefWidth="110" minWidth="90"/>
                         <TableColumn fx:id="colStockOutNamaBarang" text="Barang"         prefWidth="140" minWidth="120"/>
                         <TableColumn fx:id="colStockOutTujuan"     text="Tujuan"         prefWidth="130" minWidth="110"/>
+                        <TableColumn fx:id="colStockOutAlasan"     text="Alasan"         prefWidth="120" minWidth="100"/>
                         <TableColumn fx:id="colStockOutJumlah"     text="Jumlah"         prefWidth="80"  minWidth="70"/>
                         <TableColumn fx:id="colStockOutTanggal"    text="Tanggal"        prefWidth="140" minWidth="120"/>
                     </columns>

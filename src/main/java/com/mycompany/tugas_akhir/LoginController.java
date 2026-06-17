@@ -108,6 +108,17 @@ public class LoginController implements Initializable {
             return;
         }
 
+        // Cek koneksi database
+        if (!DatabaseConnection.getInstance().isConnected()) {
+            showAlert(Alert.AlertType.ERROR, "Koneksi Database Error",
+                    "Tidak dapat terhubung ke database.\n\n" +
+                    "Pastikan:\n" +
+                    "• MySQL Server sedang berjalan\n" +
+                    "• Database 'gudang_akhir' sudah dibuat\n" +
+                    "• Username/password database benar");
+            return;
+        }
+
         UserDAO.User user = userDAO.login(email, password);
 
         if (user != null) {
@@ -129,13 +140,20 @@ public class LoginController implements Initializable {
 
             // Kirim data user yang login ke DashboardController
             DashboardController dashCtrl = loader.getController();
-            dashCtrl.initUser(user);
-
+            
             Stage stage = (Stage) tfLoginEmail.getScene().getWindow();
             stage.setTitle("GudangKu - Dashboard");
             stage.setResizable(true);
             stage.setScene(scene);
+            
+            // Pass stage reference to dashboard controller BEFORE show()
+            dashCtrl.setPrimaryStage(stage);
+            dashCtrl.initUser(user);
+            
             stage.show();
+            
+            // Set fullscreen AFTER stage is shown to ensure it properly applies
+            stage.setFullScreen(true);
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Gagal membuka dashboard: " + e.getMessage());

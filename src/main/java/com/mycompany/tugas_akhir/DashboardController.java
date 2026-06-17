@@ -1,5 +1,6 @@
 package com.mycompany.tugas_akhir;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -8,13 +9,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class DashboardController implements Initializable {
 
     // Data user yang sedang login (di-set oleh LoginController)
     private UserDAO.User currentUser;
+    private Stage primaryStage;
 
     // --- Sidebar nav items ---
     @FXML private HBox navDashboard;
@@ -27,7 +32,9 @@ public class DashboardController implements Initializable {
     // --- Topbar ---
     @FXML private Label pageTitleLabel;
     @FXML private TextField searchField;
-    @FXML private Button avatarBtn;
+    @FXML private Label topbarAvatarLabel;
+    @FXML private ImageView topbarAvatarImg;
+    @FXML private StackPane topbarAvatarFallback;
 
     // --- Activity stats ---
     @FXML private Label lblBarangMasuk;
@@ -47,6 +54,14 @@ public class DashboardController implements Initializable {
         // Load dummy stats (nanti replace dengan query DB)
         lblBarangMasuk.setText("1,234");
         lblBarangKeluar.setText("900");
+        
+        // Load dashboard content initially
+        loadDashboardPage();
+        
+        // Cache the stage reference from the page title label
+        if (pageTitleLabel != null && pageTitleLabel.getScene() != null) {
+            primaryStage = (Stage) pageTitleLabel.getScene().getWindow();
+        }
     }
 
     /**
@@ -56,12 +71,78 @@ public class DashboardController implements Initializable {
     public void initUser(UserDAO.User user) {
         this.currentUser = user;
         if (user != null) {
-            // Tampilkan inisial nama di avatar button
-            String inisial = user.fullName.substring(0, 1).toUpperCase();
-            avatarBtn.setText(inisial);
-            // Tooltip nama lengkap di avatar
-            avatarBtn.setTooltip(new Tooltip(user.fullName + " (" + user.role + ")"));
+            updateTopbarAvatar(user);
         }
+        
+        // Cache stage after scene is fully loaded
+        if (primaryStage == null && pageTitleLabel != null && pageTitleLabel.getScene() != null) {
+            primaryStage = (Stage) pageTitleLabel.getScene().getWindow();
+        }
+        
+        // Ensure fullscreen is applied after user init
+        ensureFullscreen();
+    }
+
+    /**
+     * Untuk set user di controller yang baru di-load
+     */
+    public void setCurrentUser(UserDAO.User user) {
+        initUser(user);
+    }
+
+    /**
+     * Set the primary stage reference (called from LoginController)
+     */
+    public void setPrimaryStage(Stage stage) {
+        this.primaryStage = stage;
+    }
+
+    /**
+     * Update avatar button di topbar (biasanya dipanggil dari SettingController)
+     * Menampilkan foto profil jika ada, atau menampilkan inisial sebagai fallback
+     */
+    public void updateTopbarAvatar(UserDAO.User user) {
+        if (user == null) return;
+
+        String picPath = user.profilePicturePath;
+        
+        // Jika ada foto profil yang disimpan
+        if (picPath != null && !picPath.isBlank()) {
+            File f = new File(picPath);
+            if (f.exists()) {
+                try {
+                    Image img = new Image(f.toURI().toString(), 34, 34, true, true);
+                    topbarAvatarImg.setImage(img);
+                    
+                    // Apply circular clip
+                    Circle clip = new Circle(17, 17, 17);
+                    topbarAvatarImg.setClip(clip);
+                    
+                    // Tampilkan foto, sembunyikan fallback
+                    topbarAvatarImg.setVisible(true);
+                    topbarAvatarImg.setManaged(true);
+                    topbarAvatarFallback.setVisible(false);
+                    topbarAvatarFallback.setManaged(false);
+                    return;
+                } catch (Exception e) {
+                    System.err.println("[DashboardController] Gagal load avatar: " + e.getMessage());
+                }
+            }
+        }
+        
+        // Fallback: tampilkan inisial
+        topbarAvatarLabel.setText(user.getInitial());
+        topbarAvatarImg.setVisible(false);
+        topbarAvatarImg.setManaged(false);
+        topbarAvatarFallback.setVisible(true);
+        topbarAvatarFallback.setManaged(true);
+    }
+
+    /**
+     * Getter untuk currentPage (digunakan untuk tracking halaman aktif)
+     */
+    public String getCurrentPage() {
+        return currentPage;
     }
 
     // ============================================================
@@ -73,6 +154,7 @@ public class DashboardController implements Initializable {
         setActiveNav("dashboard");
         pageTitleLabel.setText("Dashboard");
         currentPage = "dashboard";
+        ensureFullscreen();
         loadDashboardPage();
     }
 
@@ -81,6 +163,7 @@ public class DashboardController implements Initializable {
         setActiveNav("storage");
         pageTitleLabel.setText("Storage");
         currentPage = "storage";
+        ensureFullscreen();
         loadStoragePage();
     }
 
@@ -89,6 +172,7 @@ public class DashboardController implements Initializable {
         setActiveNav("movements");
         pageTitleLabel.setText("Movements");
         currentPage = "movements";
+        ensureFullscreen();
         loadMovementsPage();
     }
 
@@ -96,21 +180,27 @@ public class DashboardController implements Initializable {
     private void handleNavCustomer() {
         setActiveNav("customer");
         pageTitleLabel.setText("Customer");
-        showComingSoon("Customer");
+        currentPage = "customer";
+        ensureFullscreen();
+        loadCustomerPage();
     }
 
     @FXML
     private void handleNavReport() {
         setActiveNav("report");
         pageTitleLabel.setText("Report");
-        showComingSoon("Report");
+        currentPage = "report";
+        ensureFullscreen();
+        loadReportPage();
     }
 
     @FXML
     private void handleNavSetting() {
         setActiveNav("setting");
         pageTitleLabel.setText("Setting");
-        showComingSoon("Setting");
+        currentPage = "setting";
+        ensureFullscreen();
+        loadSettingPage();
     }
 
     @FXML
@@ -122,7 +212,8 @@ public class DashboardController implements Initializable {
     private void handleSettingShortcut() {
         setActiveNav("setting");
         pageTitleLabel.setText("Setting");
-        showComingSoon("Setting");
+        currentPage = "setting";
+        loadSettingPage();
     }
 
     @FXML
@@ -189,6 +280,23 @@ public class DashboardController implements Initializable {
         });
     }
 
+    private void ensureFullscreen() {
+        // Always try to get fresh stage reference
+        if (pageTitleLabel != null && pageTitleLabel.getScene() != null) {
+            Stage currentStage = (Stage) pageTitleLabel.getScene().getWindow();
+            if (currentStage != null) {
+                primaryStage = currentStage;
+                primaryStage.setFullScreen(true);
+                return;
+            }
+        }
+        
+        // Fallback to cached reference
+        if (primaryStage != null) {
+            primaryStage.setFullScreen(true);
+        }
+    }
+
     private void goToLogin() {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -197,6 +305,7 @@ public class DashboardController implements Initializable {
             Scene scene = new Scene(loader.load(), 950, 600);
             Stage stage = (Stage) pageTitleLabel.getScene().getWindow();
             stage.setTitle("GudangKu - Login");
+            stage.setFullScreen(false);
             stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
@@ -243,22 +352,82 @@ public class DashboardController implements Initializable {
         }
     }
 
-    private void loadDashboardPage() {
+    private void loadCustomerPage() {
         try {
-            // Reload dashboard content dari FXML
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/dashboard.fxml")
+                    getClass().getResource("/fxml/customer.fxml")
             );
-            // Untuk sekarang, biarkan dashboard tetap sebagai default
-            mainScrollPane.getStyleClass().clear();
-        } catch (Exception e) {
+            VBox customerPage = loader.load();
+
+            // Pass current user to CustomerController
+            CustomerController controller = loader.getController();
+            if (controller != null && currentUser != null) {
+                controller.initUser(currentUser);
+            }
+
+            mainScrollPane.setContent(customerPage);
+        } catch (IOException e) {
             e.printStackTrace();
+            showInfo("Error", "Gagal load halaman Customer: " + e.getMessage());
         }
     }
 
-    private void showComingSoon(String feature) {
-        showInfo(feature, "Halaman " + feature + " sedang dalam pengembangan. Segera hadir!");
+    private void loadReportPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/report.fxml")
+            );
+            VBox reportPage = loader.load();
+
+            // Pass current user to ReportController
+            ReportController controller = loader.getController();
+            if (controller != null && currentUser != null) {
+                controller.initUser(currentUser);
+            }
+
+            mainScrollPane.setContent(reportPage);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showInfo("Error", "Gagal load halaman Report: " + e.getMessage());
+        }
     }
+
+    private void loadSettingPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/setting.fxml")
+            );
+            VBox settingPage = loader.load();
+
+            // Pass current user and dashboard controller to SettingController
+            SettingController controller = loader.getController();
+            if (controller != null && currentUser != null) {
+                controller.initUser(currentUser);
+                controller.setDashboardController(this);
+            }
+
+            mainScrollPane.setContent(settingPage);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showInfo("Error", "Gagal load halaman Setting: " + e.getMessage());
+        }
+    }
+
+    private void loadDashboardPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/dashboard-content.fxml")
+            );
+            VBox dashboardContent = loader.load();
+            mainScrollPane.setContent(dashboardContent);
+            ensureFullscreen();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showInfo("Error", "Gagal load halaman Dashboard: " + e.getMessage());
+        }
+    }
+        
+
 
     private void showInfo(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

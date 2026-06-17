@@ -3,7 +3,6 @@ package com.mycompany.tugas_akhir;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,6 +52,7 @@ public class MovementsController implements Initializable {
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colAllTipeTx;
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colAllNamaBarang;
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colAllSupplierTx;
+    @FXML private TableColumn<TransaksiDAO.Transaksi, String> colAllAlasan;
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colAllJumlahTx;
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colAllTanggal;
 
@@ -70,6 +70,7 @@ public class MovementsController implements Initializable {
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colStockInKodeTx;
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colStockInNamaBarang;
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colStockInSupplier;
+    @FXML private TableColumn<TransaksiDAO.Transaksi, String> colStockInAlasan;
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colStockInJumlah;
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colStockInTanggal;
 
@@ -87,6 +88,7 @@ public class MovementsController implements Initializable {
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colStockOutKodeTx;
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colStockOutNamaBarang;
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colStockOutTujuan;
+    @FXML private TableColumn<TransaksiDAO.Transaksi, String> colStockOutAlasan;
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colStockOutJumlah;
     @FXML private TableColumn<TransaksiDAO.Transaksi, String> colStockOutTanggal;
 
@@ -198,6 +200,7 @@ public class MovementsController implements Initializable {
         });
         colAllNamaBarang.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().namaBarang));
         colAllSupplierTx.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().namaSupplier));
+        colAllAlasan.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().keterangan != null ? d.getValue().keterangan : "-"));
         colAllJumlahTx.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().jumlah)));
         colAllTanggal.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().tanggal));
         tableAllTransaksi.setItems(allTxList);
@@ -252,6 +255,7 @@ public class MovementsController implements Initializable {
         colStockInKodeTx.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().kodeTransaksi));
         colStockInNamaBarang.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().namaBarang));
         colStockInSupplier.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().namaSupplier));
+        colStockInAlasan.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().keterangan != null ? d.getValue().keterangan : "-"));
         colStockInJumlah.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().jumlah)));
         colStockInTanggal.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().tanggal));
         tableStockInTransaksi.setItems(stockInTxList);
@@ -337,7 +341,8 @@ public class MovementsController implements Initializable {
 
         colStockOutKodeTx.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().kodeTransaksi));
         colStockOutNamaBarang.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().namaBarang));
-        colStockOutTujuan.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().namaSupplier));
+        colStockOutTujuan.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().keterangan != null ? d.getValue().keterangan : "-"));
+        colStockOutAlasan.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().keterangan != null ? d.getValue().keterangan : "-"));
         colStockOutJumlah.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().jumlah)));
         colStockOutTanggal.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().tanggal));
         tableStockOutTransaksi.setItems(stockOutTxList);
@@ -564,44 +569,45 @@ public class MovementsController implements Initializable {
     }
 
     private void exportToPDF(File file, ObservableList<TransaksiDAO.Transaksi> txList, String title) throws Exception {
-        com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter(file);
-        com.itextpdf.kernel.pdf.PdfDocument pdfDoc = new com.itextpdf.kernel.pdf.PdfDocument(writer);
-        com.itextpdf.layout.Document document = new com.itextpdf.layout.Document(pdfDoc);
+        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+        com.itextpdf.text.pdf.PdfWriter.getInstance(document, new java.io.FileOutputStream(file));
+        document.open();
         
         // Header
-        com.itextpdf.layout.element.Paragraph titlePara = new com.itextpdf.layout.element.Paragraph(title)
-            .setFontSize(18)
-            .setBold()
-            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER);
+        com.itextpdf.text.Paragraph titlePara = new com.itextpdf.text.Paragraph(title);
+        titlePara.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+        titlePara.getFont().setSize(18);
+        titlePara.getFont().setStyle(com.itextpdf.text.Font.BOLD);
         document.add(titlePara);
         
-        com.itextpdf.layout.element.Paragraph date = new com.itextpdf.layout.element.Paragraph(
-            "Tanggal: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss")))
-            .setFontSize(10)
-            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
-            .setMarginBottom(12);
+        com.itextpdf.text.Paragraph date = new com.itextpdf.text.Paragraph(
+            "Tanggal: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss")));
+        date.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+        date.getFont().setSize(10);
+        date.setSpacingAfter(12);
         document.add(date);
         
         // Stats
         long masuk = txList.stream().filter(t -> "masuk".equals(t.tipe)).count();
         long keluar = txList.stream().filter(t -> "keluar".equals(t.tipe)).count();
         
-        com.itextpdf.layout.element.Paragraph stats = new com.itextpdf.layout.element.Paragraph(
-            "Total Transaksi: " + txList.size() + " | Masuk: " + masuk + " | Keluar: " + keluar)
-            .setFontSize(10)
-            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
-            .setMarginBottom(16);
+        com.itextpdf.text.Paragraph stats = new com.itextpdf.text.Paragraph(
+            "Total Transaksi: " + txList.size() + " | Masuk: " + masuk + " | Keluar: " + keluar);
+        stats.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+        stats.getFont().setSize(10);
+        stats.setSpacingAfter(16);
         document.add(stats);
         
         // Table
-        com.itextpdf.layout.element.Table table = new com.itextpdf.layout.element.Table(
-            new float[]{30, 120, 100, 100, 80, 100});
-        table.setWidth(com.itextpdf.layout.properties.UnitValue.createPercentValue(100));
+        com.itextpdf.text.pdf.PdfPTable table = new com.itextpdf.text.pdf.PdfPTable(6);
+        table.setWidthPercentage(100);
         
         // Header cells
         String[] headers = {"#", "KODE", "BARANG", "TIPE", "JUMLAH", "TANGGAL"};
         for (String h : headers) {
-            table.addHeaderCell(h).setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER);
+            com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Paragraph(h));
+            cell.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+            table.addCell(cell);
         }
         
         // Data rows

@@ -4,6 +4,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.shape.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -123,11 +125,25 @@
                 <!-- Notification -->
                 <Button styleClass="icon-btn" text="🔔" onAction="#handleNotification"/>
 
-                <!-- Settings shortcut -->
-                <Button styleClass="icon-btn" text="📄" onAction="#handleSettingShortcut"/>
-
-                <!-- Avatar -->
-                <Button styleClass="avatar-btn" text="A" fx:id="avatarBtn"/>
+                <!-- Avatar (foto profil atau inisial) -->
+                <StackPane fx:id="topbarAvatarStack"
+                           styleClass="topbar-avatar-stack"
+                           onMouseClicked="#handleSettingShortcut"
+                           style="-fx-cursor: hand;">
+                    <!-- Foto profil -->
+                    <ImageView fx:id="topbarAvatarImg"
+                               fitWidth="34" fitHeight="34"
+                               preserveRatio="false"
+                               visible="false" managed="false">
+                        <clip>
+                            <Circle centerX="17" centerY="17" radius="17"/>
+                        </clip>
+                    </ImageView>
+                    <!-- Fallback inisial -->
+                    <StackPane fx:id="topbarAvatarFallback" styleClass="avatar-btn">
+                        <Label fx:id="topbarAvatarLabel" text="A" styleClass="avatar-label"/>
+                    </StackPane>
+                </StackPane>
 
             </HBox>
 
