@@ -17,7 +17,8 @@ public class App extends Application {
         Scene scene = new Scene(fxml.load(), 950, 600);
 
         stage.setTitle("GudangKu - Sistem Management Gudang");
-        stage.setResizable(false);
+        stage.setResizable(true);
+        stage.setFullScreen(true);
         stage.setScene(scene);
         stage.show();
     }

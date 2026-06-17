@@ -45,11 +45,14 @@ public class DatabaseConnection {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("[DB] Koneksi berhasil ke database: " + DATABASE);
+            System.out.println("[DB] ✓ Koneksi berhasil ke database: " + DATABASE);
         } catch (ClassNotFoundException e) {
-            System.err.println("[DB] Driver MySQL tidak ditemukan: " + e.getMessage());
+            System.err.println("[DB] ✗ Driver MySQL tidak ditemukan: " + e.getMessage());
+            connection = null;
         } catch (SQLException e) {
-            System.err.println("[DB] Gagal konek ke MySQL: " + e.getMessage());
+            System.err.println("[DB] ✗ Gagal konek ke MySQL: " + e.getMessage());
+            System.err.println("[DB] Pastikan MySQL server berjalan di " + HOST + ":" + PORT);
+            connection = null;
         }
     }
 
@@ -80,6 +83,17 @@ public class DatabaseConnection {
             }
         } catch (SQLException e) {
             System.err.println("[DB] Gagal menutup koneksi: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Cek apakah koneksi database aktif
+     */
+    public boolean isConnected() {
+        try {
+            return connection != null && !connection.isClosed();
+        } catch (SQLException e) {
+            return false;
         }
     }
 }

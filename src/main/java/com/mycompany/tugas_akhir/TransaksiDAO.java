@@ -21,11 +21,12 @@ public class TransaksiDAO {
         public String kodeRak;
         public int    jumlah;
         public String keterangan;
+        public String alasan;
         public String tanggal;
 
         public Transaksi(int id, String kodeTransaksi, String tipe, int barangId,
                          String namaBarang, String namaSupplier, String kodeRak,
-                         int jumlah, String keterangan, String tanggal) {
+                         int jumlah, String keterangan, String alasan, String tanggal) {
             this.id             = id;
             this.kodeTransaksi  = kodeTransaksi;
             this.tipe           = tipe;
@@ -35,6 +36,7 @@ public class TransaksiDAO {
             this.kodeRak        = kodeRak;
             this.jumlah         = jumlah;
             this.keterangan     = keterangan;
+            this.alasan         = alasan;
             this.tanggal        = tanggal;
         }
     }
@@ -47,6 +49,7 @@ public class TransaksiDAO {
                    + "COALESCE(s.nama_supplier, '-') AS supplier, "
                    + "COALESCE(r.kode_rak, '-') AS kode_rak, "
                    + "t.jumlah, COALESCE(t.keterangan, '') AS keterangan, "
+                   + "'' AS alasan, "
                    + "DATE_FORMAT(t.tanggal, '%d/%m/%Y %H:%i') AS tgl "
                    + "FROM transaksi t "
                    + "JOIN barang b ON t.barang_id = b.id "
@@ -67,6 +70,7 @@ public class TransaksiDAO {
                     rs.getString("kode_rak"),
                     rs.getInt("jumlah"),
                     rs.getString("keterangan"),
+                    rs.getString("alasan"),
                     rs.getString("tgl")
                 ));
             }
@@ -162,6 +166,133 @@ public class TransaksiDAO {
             System.err.println("[TransaksiDAO] getStatistik24H: " + e.getMessage());
         }
         return new int[]{masuk, keluar};
+    }
+
+    // ── Ringkasan transaksi berdasarkan periode ───────────────────────────────
+    /**
+     * Mengembalikan array: [totalTransaksi, totalMasuk, totalKeluar, barangAktif]
+     */
+    public int[] getReportSummary(String startDate, String endDate) {
+        int totalTx = 0, totalMasuk = 0, totalKeluar = 0, barangAktif = 0;
+        String sql = "SELECT "
+                   + "COUNT(*) as total_tx, "
+                   + "COALESCE(SUM(CASE WHEN tipe='masuk' THEN jumlah ELSE 0 END), 0) as total_masuk, "
+                   + "COALESCE(SUM(CASE WHEN tipe='keluar' THEN jumlah ELSE 0 END), 0) as total_keluar, "
+                   + "COUNT(DISTINCT barang_id) as barang_aktif "
+                   + "FROM transaksi "
+                   + "WHERE DATE(tanggal) BETWEEN ? AND ?";
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, startDate);
+            ps.setString(2, endDate);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                totalTx      = rs.getInt("total_tx");
+                totalMasuk   = rs.getInt("total_masuk");
+                totalKeluar  = rs.getInt("total_keluar");
+                barangAktif  = rs.getInt("barang_aktif");
+            }
+        } catch (SQLException e) {
+            System.err.println("[TransaksiDAO] getReportSummary: " + e.getMessage());
+        }
+        return new int[]{totalTx, totalMasuk, totalKeluar, barangAktif};
+    }
+
+    // ── List transaksi berdasarkan periode + tipe (untuk tabel report) ────────
+    public List<Transaksi> getTransaksiByPeriod(String startDate, String endDate, String tipe) {
+        List<Transaksi> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+            "SELECT t.id, t.kode_transaksi, t.tipe, t.barang_id, "
+          + "b.nama_barang, "
+          + "COALESCE(s.nama_supplier, '-') AS supplier, "
+          + "COALESCE(r.kode_rak, '-') AS kode_rak, "
+          + "t.jumlah, COALESCE(t.keterangan, '') AS keterangan, "
+          + "'' AS alasan, "
+          + "DATE_FORMAT(t.tanggal, '%d/%m/%Y %H:%i') AS tgl "
+          + "FROM transaksi t "
+          + "JOIN barang b ON t.barang_id = b.id "
+          + "LEFT JOIN supplier s ON t.supplier_id = s.id "
+          + "LEFT JOIN rak r ON t.rak_id = r.id "
+          + "WHERE DATE(t.tanggal) BETWEEN ? AND ?"
+        );
+        if (tipe != null && !tipe.isEmpty() && !tipe.equalsIgnoreCase("semua")) {
+            sql.append(" AND t.tipe = ?");
+        }
+        sql.append(" ORDER BY t.tanggal DESC LIMIT 500");
+
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            ps.setString(1, startDate);
+            ps.setString(2, endDate);
+            if (tipe != null && !tipe.isEmpty() && !tipe.equalsIgnoreCase("semua")) {
+                ps.setString(3, tipe.toLowerCase());
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Transaksi(
+                    rs.getInt("id"),
+                    rs.getString("kode_transaksi"),
+                    rs.getString("tipe"),
+                    rs.getInt("barang_id"),
+                    rs.getString("nama_barang"),
+                    rs.getString("supplier"),
+                    rs.getString("kode_rak"),
+                    rs.getInt("jumlah"),
+                    rs.getString("keterangan"),
+                    rs.getString("alasan"),
+                    rs.getString("tgl")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("[TransaksiDAO] getTransaksiByPeriod: " + e.getMessage());
+        }
+        return list;
+    }
+
+    // ── Model untuk Top Barang ─────────────────────────────────────────────────
+    public static class TopBarang {
+        public String namaBarang;
+        public String kodeBarang;
+        public int    totalJumlah;
+        public int    totalTransaksi;
+
+        public TopBarang(String namaBarang, String kodeBarang, int totalJumlah, int totalTransaksi) {
+            this.namaBarang     = namaBarang;
+            this.kodeBarang     = kodeBarang;
+            this.totalJumlah    = totalJumlah;
+            this.totalTransaksi = totalTransaksi;
+        }
+    }
+
+    // ── Top barang paling aktif berdasarkan periode ───────────────────────────
+    public List<TopBarang> getTopBarang(String startDate, String endDate, int limit) {
+        List<TopBarang> list = new ArrayList<>();
+        String sql = "SELECT b.nama_barang, b.kode_barang, "
+                   + "SUM(t.jumlah) as total_jumlah, COUNT(t.id) as total_transaksi "
+                   + "FROM transaksi t "
+                   + "JOIN barang b ON t.barang_id = b.id "
+                   + "WHERE DATE(t.tanggal) BETWEEN ? AND ? "
+                   + "GROUP BY b.id "
+                   + "ORDER BY total_jumlah DESC "
+                   + "LIMIT ?";
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, startDate);
+            ps.setString(2, endDate);
+            ps.setInt(3, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new TopBarang(
+                    rs.getString("nama_barang"),
+                    rs.getString("kode_barang"),
+                    rs.getInt("total_jumlah"),
+                    rs.getInt("total_transaksi")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("[TransaksiDAO] getTopBarang: " + e.getMessage());
+        }
+        return list;
     }
 
     // ── Helper: generate kode transaksi ───────────────────────────────────────

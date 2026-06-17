@@ -10,7 +10,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
@@ -209,22 +208,22 @@ public class StorageController implements Initializable {
     }
 
     private void exportToPDF(java.io.File file) throws Exception {
-        com.itextpdf.kernel.pdf.PdfWriter writer = new com.itextpdf.kernel.pdf.PdfWriter(file);
-        com.itextpdf.kernel.pdf.PdfDocument pdfDoc = new com.itextpdf.kernel.pdf.PdfDocument(writer);
-        com.itextpdf.layout.Document document = new com.itextpdf.layout.Document(pdfDoc);
+        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+        com.itextpdf.text.pdf.PdfWriter.getInstance(document, new java.io.FileOutputStream(file));
+        document.open();
         
         // Header
-        com.itextpdf.layout.element.Paragraph title = new com.itextpdf.layout.element.Paragraph("Laporan Inventaris Barang")
-            .setFontSize(18)
-            .setBold()
-            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER);
+        com.itextpdf.text.Paragraph title = new com.itextpdf.text.Paragraph("Laporan Inventaris Barang");
+        title.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+        title.getFont().setSize(18);
+        title.getFont().setStyle(com.itextpdf.text.Font.BOLD);
         document.add(title);
         
-        com.itextpdf.layout.element.Paragraph date = new com.itextpdf.layout.element.Paragraph(
-            "Tanggal: " + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss")))
-            .setFontSize(10)
-            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
-            .setMarginBottom(12);
+        com.itextpdf.text.Paragraph date = new com.itextpdf.text.Paragraph(
+            "Tanggal: " + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss")));
+        date.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+        date.getFont().setSize(10);
+        date.setSpacingAfter(12);
         document.add(date);
         
         // Stats
@@ -232,22 +231,23 @@ public class StorageController implements Initializable {
         long rendah = barangList.stream().filter(b -> b.stok > 0 && b.stok < b.stokMin).count();
         long habis = barangList.stream().filter(b -> b.stok <= 0).count();
         
-        com.itextpdf.layout.element.Paragraph stats = new com.itextpdf.layout.element.Paragraph(
-            "Total Barang: " + barangList.size() + " | In Stock: " + sehat + " | Low Stock: " + rendah + " | Out of Stock: " + habis)
-            .setFontSize(10)
-            .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER)
-            .setMarginBottom(16);
+        com.itextpdf.text.Paragraph stats = new com.itextpdf.text.Paragraph(
+            "Total Barang: " + barangList.size() + " | In Stock: " + sehat + " | Low Stock: " + rendah + " | Out of Stock: " + habis);
+        stats.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+        stats.getFont().setSize(10);
+        stats.setSpacingAfter(16);
         document.add(stats);
         
         // Table
-        com.itextpdf.layout.element.Table table = new com.itextpdf.layout.element.Table(
-            new float[]{30, 120, 100, 80, 60, 60, 80, 90});
-        table.setWidth(com.itextpdf.layout.properties.UnitValue.createPercentValue(100));
+        com.itextpdf.text.pdf.PdfPTable table = new com.itextpdf.text.pdf.PdfPTable(8);
+        table.setWidthPercentage(100);
         
         // Header cells
         String[] headers = {"#", "ITEM / SKU", "CATEGORY", "LOCATION", "QTY", "MIN/MAX", "STATUS", "LAST UPDATE"};
         for (String h : headers) {
-            table.addHeaderCell(h).setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER);
+            com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Paragraph(h));
+            cell.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
+            table.addCell(cell);
         }
         
         // Data rows
@@ -267,25 +267,6 @@ public class StorageController implements Initializable {
         
         document.add(table);
         document.close();
-    }
-
-    private void handleDelete(BarangDAO.Barang b) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Hapus Barang");
-        confirm.setHeaderText(null);
-        confirm.setContentText("Hapus barang \"" + b.namaBarang + "\" (" + b.kodeBarang + ")?\n"
-            + "Pastikan tidak ada transaksi yang terkait dengan barang ini.");
-        confirm.showAndWait().ifPresent(btn -> {
-            if (btn == ButtonType.OK) {
-                if (barangDAO.deleteBarang(b.id)) {
-                    loadData();
-                    showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Barang berhasil dihapus.");
-                } else {
-                    showAlert(Alert.AlertType.ERROR, "Gagal",
-                        "Tidak bisa menghapus barang.\nBarang mungkin masih memiliki riwayat transaksi.");
-                }
-            }
-        });
     }
 
     // ── Dialog Tambah / Edit ──────────────────────────────────────────────────
