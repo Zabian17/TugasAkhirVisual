@@ -10,7 +10,7 @@
               leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30"
               uuid="c3d4e5f6-a7b8-9012-cdef-123456789001">
 
-    <!-- Parameters -->
+    
     <parameter name="reportDate" class="java.lang.String"/>
     <parameter name="periodeInfo" class="java.lang.String"/>
     <parameter name="totalTransaksi" class="java.lang.Integer"/>
@@ -18,7 +18,7 @@
     <parameter name="totalKeluar" class="java.lang.Integer"/>
     <parameter name="barangAktif" class="java.lang.Integer"/>
 
-    <!-- Fields -->
+    
     <field name="no" class="java.lang.Integer"/>
     <field name="kodeTx" class="java.lang.String"/>
     <field name="tipe" class="java.lang.String"/>
@@ -28,7 +28,7 @@
     <field name="rak" class="java.lang.String"/>
     <field name="tanggal" class="java.lang.String"/>
 
-    <!-- Title Band -->
+    
     <title>
         <band height="100">
             <staticText>
@@ -62,7 +62,7 @@
         </band>
     </title>
 
-    <!-- Column Header -->
+    
     <columnHeader>
         <band height="25">
             <staticText>
@@ -132,7 +132,7 @@
         </band>
     </columnHeader>
 
-    <!-- Detail Band -->
+    
     <detail>
         <band height="18">
             <textField>
@@ -202,7 +202,7 @@
         </band>
     </detail>
 
-    <!-- Page Footer -->
+    
     <pageFooter>
         <band height="30">
             <textField>
@@ -222,7 +222,7 @@
         </band>
     </pageFooter>
 
-    <!-- Summary Band -->
+    
     <summary>
         <band height="30">
             <textField>

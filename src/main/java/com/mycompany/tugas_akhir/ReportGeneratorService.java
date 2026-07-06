@@ -16,20 +16,13 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
-/**
- * Service untuk generate dan menampilkan laporan menggunakan JasperReports.
- * Menampilkan popup JasperViewer (preview, print, export built-in).
- *
- * Menggunakan JRMapCollectionDataSource karena model class existing
- * (TransaksiDAO.Transaksi, BarangDAO.Barang, dll.) menggunakan public fields
- * alih-alih getter/setter pattern (JavaBeans).
- */
+
 public class ReportGeneratorService {
 
     private static final DateTimeFormatter DATE_FORMAT =
             DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss");
 
-    // ── Cache compiled reports ────────────────────────────────────────────────
+    
     private static JasperReport movementsAllReport;
     private static JasperReport movementsStockInReport;
     private static JasperReport movementsStockOutReport;
@@ -37,9 +30,9 @@ public class ReportGeneratorService {
     private static JasperReport inventarisReport;
     private static JasperReport reportReport;
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // MOVEMENTS — All Tab (7 kolom: Kode, Tipe, Barang, Supplier, Alasan, Jumlah, Tanggal)
-    // ════════════════════════════════════════════════════════════════════════════
+    
+    
+    
 
     public static void showMovementsAllReport(List<TransaksiDAO.Transaksi> dataList,
                                               String title) throws Exception {
@@ -74,9 +67,9 @@ public class ReportGeneratorService {
         showViewer(jp, title);
     }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // MOVEMENTS — Stock In Tab (6 kolom: Kode, Barang, Supplier, Alasan, Jumlah, Tanggal)
-    // ════════════════════════════════════════════════════════════════════════════
+    
+    
+    
 
     public static void showMovementsStockInReport(List<TransaksiDAO.Transaksi> dataList,
                                                   String title) throws Exception {
@@ -106,9 +99,9 @@ public class ReportGeneratorService {
         showViewer(jp, title);
     }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // MOVEMENTS — Stock Out Tab (6 kolom: Kode, Barang, Tujuan, Alasan, Jumlah, Tanggal)
-    // ════════════════════════════════════════════════════════════════════════════
+    
+    
+    
 
     public static void showMovementsStockOutReport(List<TransaksiDAO.Transaksi> dataList,
                                                    String title) throws Exception {
@@ -122,7 +115,7 @@ public class ReportGeneratorService {
         List<Map<String, ?>> rows = new ArrayList<>();
         int no = 1;
         for (TransaksiDAO.Transaksi t : dataList) {
-            // Parse keterangan: "Tujuan - Detail keterangan"
+            
             String tujuan = "-";
             String keterangan = "-";
             if (t.keterangan != null && !t.keterangan.isEmpty()) {
@@ -150,9 +143,9 @@ public class ReportGeneratorService {
         showViewer(jp, title);
     }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // MOVEMENTS — Adjustment Tab (6 kolom: Kode, Barang, Alasan, Keterangan, Stok Baru, Tanggal)
-    // ════════════════════════════════════════════════════════════════════════════
+    
+    
+    
 
     public static void showMovementsAdjustmentReport(List<TransaksiDAO.Transaksi> dataList,
                                                      String title) throws Exception {
@@ -166,7 +159,7 @@ public class ReportGeneratorService {
         List<Map<String, ?>> rows = new ArrayList<>();
         int no = 1;
         for (TransaksiDAO.Transaksi t : dataList) {
-            // Parse keterangan: "Alasan - Detail keterangan"
+            
             String alasan = "-";
             String keterangan = "-";
             if (t.keterangan != null) {
@@ -194,9 +187,9 @@ public class ReportGeneratorService {
         showViewer(jp, title);
     }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // INVENTARIS — Storage Tab
-    // ════════════════════════════════════════════════════════════════════════════
+    
+    
+    
 
     public static void showInventarisReport(List<BarangDAO.Barang> dataList) throws Exception {
         JasperReport report = getInventarisReport();
@@ -238,9 +231,9 @@ public class ReportGeneratorService {
         showViewer(jp, "Laporan Inventaris Barang");
     }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // REPORT — Transaksi Per Periode
-    // ════════════════════════════════════════════════════════════════════════════
+    
+    
+    
 
     public static void showReportPeriode(List<ReportController.ReportRow> dataList,
                                          String periodeInfo,
@@ -274,9 +267,9 @@ public class ReportGeneratorService {
         showViewer(jp, "Laporan Transaksi Gudang");
     }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // PRIVATE — Viewer, Compile & Cache
-    // ════════════════════════════════════════════════════════════════════════════
+    
+    
+    
 
     private static void showViewer(JasperPrint jasperPrint, String title) {
         JasperViewer viewer = new JasperViewer(jasperPrint, false);
@@ -334,7 +327,7 @@ public class ReportGeneratorService {
         return JasperCompileManager.compileReport(is);
     }
 
-    // ── Helper ────────────────────────────────────────────────────────────────
+    
     private static String formatLastUpdate(long timestamp) {
         if (timestamp == 0) return "-";
         long now = System.currentTimeMillis();

@@ -1,15 +1,15 @@
--- ============================================================
--- Migration Script v3: Add User Profile Fields
--- Database: gudang_akhir
--- Version: 3.0
--- ============================================================
--- Menambahkan kolom data profil ke tabel users jika belum ada.
--- Aman dijalankan berulang kali.
--- ============================================================
+
+
+
+
+
+
+
+
 
 USE gudang_akhir;
 
--- Tambah display_name jika belum ada
+
 SET @col1 = (SELECT COUNT(*) FROM information_schema.COLUMNS
              WHERE TABLE_SCHEMA='gudang_akhir' AND TABLE_NAME='users' AND COLUMN_NAME='display_name');
 SET @sql1 = IF(@col1=0,
@@ -17,7 +17,7 @@ SET @sql1 = IF(@col1=0,
     'SELECT ''display_name already exists'' AS info');
 PREPARE stmt1 FROM @sql1; EXECUTE stmt1; DEALLOCATE PREPARE stmt1;
 
--- Tambah phone jika belum ada
+
 SET @col2 = (SELECT COUNT(*) FROM information_schema.COLUMNS
              WHERE TABLE_SCHEMA='gudang_akhir' AND TABLE_NAME='users' AND COLUMN_NAME='phone');
 SET @sql2 = IF(@col2=0,
@@ -25,7 +25,7 @@ SET @sql2 = IF(@col2=0,
     'SELECT ''phone already exists'' AS info');
 PREPARE stmt2 FROM @sql2; EXECUTE stmt2; DEALLOCATE PREPARE stmt2;
 
--- Tambah bio jika belum ada
+
 SET @col3 = (SELECT COUNT(*) FROM information_schema.COLUMNS
              WHERE TABLE_SCHEMA='gudang_akhir' AND TABLE_NAME='users' AND COLUMN_NAME='bio');
 SET @sql3 = IF(@col3=0,
@@ -33,7 +33,7 @@ SET @sql3 = IF(@col3=0,
     'SELECT ''bio already exists'' AS info');
 PREPARE stmt3 FROM @sql3; EXECUTE stmt3; DEALLOCATE PREPARE stmt3;
 
--- Tambah profile_picture_path jika belum ada
+
 SET @col4 = (SELECT COUNT(*) FROM information_schema.COLUMNS
              WHERE TABLE_SCHEMA='gudang_akhir' AND TABLE_NAME='users' AND COLUMN_NAME='profile_picture_path');
 SET @sql4 = IF(@col4=0,
@@ -41,7 +41,7 @@ SET @sql4 = IF(@col4=0,
     'SELECT ''profile_picture_path already exists'' AS info');
 PREPARE stmt4 FROM @sql4; EXECUTE stmt4; DEALLOCATE PREPARE stmt4;
 
--- Verifikasi
+
 SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE
 FROM information_schema.COLUMNS
 WHERE TABLE_SCHEMA='gudang_akhir' AND TABLE_NAME='users'

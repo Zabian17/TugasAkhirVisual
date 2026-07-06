@@ -4,13 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object untuk tabel `barang`.
- * Menangani operasi CRUD master data barang.
- */
 public class BarangDAO {
 
-    // ── Model ─────────────────────────────────────────────────────────────────
     public static class Barang {
         public int    id;
         public String kodeBarang;
@@ -44,7 +39,7 @@ public class BarangDAO {
         }
     }
 
-    // ── Ambil semua barang ────────────────────────────────────────────────────
+
     public List<Barang> getAllBarang() {
         List<Barang> list = new ArrayList<>();
         String sql = "SELECT b.id, b.kode_barang, b.nama_barang, b.kategori, b.satuan, b.stok, b.stok_min, " +
@@ -66,7 +61,7 @@ public class BarangDAO {
         return list;
     }
 
-    // ── Search barang ─────────────────────────────────────────────────────────
+    
     public List<Barang> searchBarang(String keyword) {
         List<Barang> list = new ArrayList<>();
         String sql = "SELECT b.id, b.kode_barang, b.nama_barang, b.kategori, b.satuan, b.stok, b.stok_min, " +
@@ -93,7 +88,6 @@ public class BarangDAO {
         return list;
     }
 
-    // ── Tambah barang baru ────────────────────────────────────────────────────
     public boolean addBarang(String kode, String nama, String kategori,
                              String satuan, int stok, int stokMin) {
         String sql = "INSERT INTO barang (kode_barang, nama_barang, kategori, satuan, stok, stok_min, stok_max) "
@@ -114,7 +108,6 @@ public class BarangDAO {
         }
     }
 
-    // ── Update barang ─────────────────────────────────────────────────────────
     public boolean updateBarang(int id, String nama, String kategori,
                                 String satuan, int stok, int stokMin) {
         String sql = "UPDATE barang SET nama_barang=?, kategori=?, satuan=?, "
@@ -135,7 +128,6 @@ public class BarangDAO {
         }
     }
 
-    // ── Hapus barang ──────────────────────────────────────────────────────────
     public boolean deleteBarang(int id) {
         String sql = "DELETE FROM barang WHERE id=?";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
@@ -148,7 +140,6 @@ public class BarangDAO {
         }
     }
 
-    // ── Generate kode barang otomatis ─────────────────────────────────────────
     public String generateKodeBarang() {
         String sql = "SELECT COALESCE(MAX(CAST(SUBSTRING(kode_barang, 5) AS UNSIGNED)), 0) "
                    + "FROM barang WHERE kode_barang REGEXP '^BRG-[0-9]+$'";
@@ -162,7 +153,6 @@ public class BarangDAO {
         return "BRG-001";
     }
 
-    // ── Helper mapping ────────────────────────────────────────────────────────
     private Barang mapRow(ResultSet rs) throws SQLException {
         return new Barang(
             rs.getInt("id"),

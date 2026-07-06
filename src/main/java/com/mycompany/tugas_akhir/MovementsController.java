@@ -16,10 +16,7 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Controller untuk halaman Movements (Mutasi Barang).
- * Fitur: 4 Tab navigasi (All, Stock In, Stock Out, Adjustment)
- */
+
 public class MovementsController implements Initializable {
 
     private final TransaksiDAO transaksiDAO = new TransaksiDAO();
@@ -29,19 +26,16 @@ public class MovementsController implements Initializable {
     private UserDAO.User currentUser;
     private List<BarangDAO.Barang> barangItems;
 
-    // ── TAB BUTTONS ────────────────────────────────────────────────────────────
     @FXML private Button btnTabAll;
     @FXML private Button btnTabStockIn;
     @FXML private Button btnTabStockOut;
     @FXML private Button btnTabAdjustment;
 
-    // ── TAB CONTENT PANES ──────────────────────────────────────────────────────
     @FXML private VBox tabContentAll;
     @FXML private HBox tabContentStockIn;
     @FXML private HBox tabContentStockOut;
     @FXML private HBox tabContentAdjustment;
 
-    // ══ TAB ALL: DASHBOARD & ALL TRANSACTIONS ══════════════════════════════════
     @FXML private Label lblTotalMovements;
     @FXML private Label lblStockInCount;
     @FXML private Label lblStockOutCount;
@@ -58,7 +52,6 @@ public class MovementsController implements Initializable {
 
     private final ObservableList<TransaksiDAO.Transaksi> allTxList = FXCollections.observableArrayList();
 
-    // ══ TAB STOCK IN ═══════════════════════════════════════════════════════════
     @FXML private ComboBox<BarangDAO.Barang> cbBarangStockIn;
     @FXML private ComboBox<SupplierDAO.Supplier> cbSupplierStockIn;
     @FXML private HBox boxInfoStokStockIn;
@@ -76,7 +69,6 @@ public class MovementsController implements Initializable {
 
     private final ObservableList<TransaksiDAO.Transaksi> stockInTxList = FXCollections.observableArrayList();
 
-    // ══ TAB STOCK OUT ══════════════════════════════════════════════════════════
     @FXML private ComboBox<BarangDAO.Barang> cbBarangStockOut;
     @FXML private HBox boxInfoStokStockOut;
     @FXML private Label lblInfoStokStockOut;
@@ -94,7 +86,6 @@ public class MovementsController implements Initializable {
 
     private final ObservableList<TransaksiDAO.Transaksi> stockOutTxList = FXCollections.observableArrayList();
 
-    // ══ TAB ADJUSTMENT ═════════════════════════════════════════════════════════
     @FXML private ComboBox<BarangDAO.Barang> cbBarangAdjustment;
     @FXML private HBox boxInfoStokAdjustment;
     @FXML private Label lblInfoStokAdjustment;
@@ -112,26 +103,22 @@ public class MovementsController implements Initializable {
 
     private final ObservableList<TransaksiDAO.Transaksi> adjustmentTxList = FXCollections.observableArrayList();
 
-    // ── Lifecycle ──────────────────────────────────────────────────────────────
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setupAllTab();
         setupStockInTab();
         setupStockOutTab();
         setupAdjustmentTab();
-        switchTab("all"); // Default ke tab All
+        switchTab("all"); 
     }
 
     public void initUser(UserDAO.User user) {
         this.currentUser = user;
     }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // TAB NAVIGATION
-    // ════════════════════════════════════════════════════════════════════════════
+
 
     private void switchTab(String tab) {
-        // Sembunyikan semua
         tabContentAll.setVisible(false);
         tabContentAll.setManaged(false);
         tabContentStockIn.setVisible(false);
@@ -141,7 +128,6 @@ public class MovementsController implements Initializable {
         tabContentAdjustment.setVisible(false);
         tabContentAdjustment.setManaged(false);
 
-        // Reset semua button style
         btnTabAll.setStyle("-fx-padding: 12 20 12 20; -fx-font-size: 13px; -fx-text-fill: #6b7280; -fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0 0 2 0; -fx-border-color: transparent; -fx-cursor: hand;");
         btnTabStockIn.setStyle("-fx-padding: 12 20 12 20; -fx-font-size: 13px; -fx-text-fill: #6b7280; -fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0 0 2 0; -fx-border-color: transparent; -fx-cursor: hand;");
         btnTabStockOut.setStyle("-fx-padding: 12 20 12 20; -fx-font-size: 13px; -fx-text-fill: #6b7280; -fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0 0 2 0; -fx-border-color: transparent; -fx-cursor: hand;");
@@ -182,9 +168,6 @@ public class MovementsController implements Initializable {
     @FXML private void handleTabStockOut() { switchTab("stockOut"); }
     @FXML private void handleTabAdjustment() { switchTab("adjustment"); }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // TAB ALL - SETUP & LOAD
-    // ════════════════════════════════════════════════════════════════════════════
 
     private void setupAllTab() {
         colAllKodeTx.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().kodeTransaksi));
@@ -243,9 +226,7 @@ public class MovementsController implements Initializable {
 
     @FXML private void handleRefreshAll() { loadAllTransaksi(); }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // TAB STOCK IN - SETUP & LOAD
-    // ════════════════════════════════════════════════════════════════════════════
+
 
     private void setupStockInTab() {
         barangItems = barangDAO.getAllBarang();
@@ -332,9 +313,7 @@ public class MovementsController implements Initializable {
         boxInfoStokStockIn.setManaged(false);
     }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // TAB STOCK OUT - SETUP & LOAD
-    // ════════════════════════════════════════════════════════════════════════════
+
 
     private void setupStockOutTab() {
         cbBarangStockOut.setItems(FXCollections.observableArrayList(barangDAO.getAllBarang()));
@@ -402,7 +381,6 @@ public class MovementsController implements Initializable {
 
         String tujuan = tfTujuanStockOut.getText().trim();
         String catatan = taKeteranganStockOut.getText().trim();
-        // Gabungkan tujuan + keterangan (pola: "Tujuan - Keterangan")
         String keterangan;
         if (!tujuan.isEmpty() && !catatan.isEmpty()) {
             keterangan = tujuan + " - " + catatan;
@@ -445,9 +423,6 @@ public class MovementsController implements Initializable {
         boxInfoStokStockOut.setManaged(false);
     }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // TAB ADJUSTMENT - SETUP & LOAD
-    // ════════════════════════════════════════════════════════════════════════════
 
     private void setupAdjustmentTab() {
         cbBarangAdjustment.setItems(FXCollections.observableArrayList(barangDAO.getAllBarang()));
@@ -561,9 +536,7 @@ public class MovementsController implements Initializable {
         boxInfoStokAdjustment.setManaged(false);
     }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // EXPORT PDF METHODS
-    // ════════════════════════════════════════════════════════════════════════════
+
 
     @FXML private void handleExportAll() {
         if (allTxList.isEmpty()) { showAlert(Alert.AlertType.WARNING, "Report", "Tidak ada data untuk ditampilkan."); return; }
@@ -589,9 +562,7 @@ public class MovementsController implements Initializable {
         catch (Exception e) { showAlert(Alert.AlertType.ERROR, "Error Report", "Gagal menampilkan report:\n" + e.getMessage()); e.printStackTrace(); }
     }
 
-    // ════════════════════════════════════════════════════════════════════════════
-    // UTILITIES
-    // ════════════════════════════════════════════════════════════════════════════
+
 
     private void showAlert(Alert.AlertType type, String title, String msg) {
         Alert alert = new Alert(type);

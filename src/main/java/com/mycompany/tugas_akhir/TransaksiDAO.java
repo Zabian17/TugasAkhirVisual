@@ -4,13 +4,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object untuk tabel `transaksi`.
- * Mencatat pergerakan barang masuk/keluar dan mengupdate stok otomatis.
- */
+
 public class TransaksiDAO {
 
-    // ── Model ─────────────────────────────────────────────────────────────────
+    
     public static class Transaksi {
         public int    id;
         public String kodeTransaksi;
@@ -41,7 +38,7 @@ public class TransaksiDAO {
         }
     }
 
-    // ── Ambil semua transaksi ─────────────────────────────────────────────────
+    
     public List<Transaksi> getAllTransaksi() {
         List<Transaksi> list = new ArrayList<>();
         String sql = "SELECT t.id, t.kode_transaksi, t.tipe, t.barang_id, "
@@ -80,21 +77,18 @@ public class TransaksiDAO {
         return list;
     }
 
-    // ── Tambah transaksi + update stok (atomic) ───────────────────────────────
-    /**
-     * @return true  = berhasil
-     *         false = gagal (termasuk stok tidak cukup untuk keluar)
-     */
+    
+    
     public boolean addTransaksi(String tipe, int barangId, Integer supplierId,
                                 Integer rakId, int jumlah, String keterangan, int userId) {
         Connection conn = DatabaseConnection.getInstance().getConnection();
         try {
             conn.setAutoCommit(false);
 
-            // 1. Generate kode transaksi
+            
             String kode = generateKode(conn);
 
-            // 2. Insert ke tabel transaksi
+            
             String sqlIns = "INSERT INTO transaksi "
                           + "(kode_transaksi, tipe, barang_id, supplier_id, rak_id, jumlah, keterangan, user_id) "
                           + "VALUES (?,?,?,?,?,?,?,?)";
@@ -110,7 +104,7 @@ public class TransaksiDAO {
                 ps.executeUpdate();
             }
 
-            // 3. Update stok barang
+            
             if ("masuk".equals(tipe)) {
                 String sqlUp = "UPDATE barang SET stok = stok + ? WHERE id = ?";
                 try (PreparedStatement ps = conn.prepareStatement(sqlUp)) {
@@ -119,7 +113,7 @@ public class TransaksiDAO {
                     ps.executeUpdate();
                 }
             } else {
-                // Keluar: pastikan stok cukup
+                
                 String sqlUp = "UPDATE barang SET stok = stok - ? WHERE id = ? AND stok >= ?";
                 try (PreparedStatement ps = conn.prepareStatement(sqlUp)) {
                     ps.setInt(1, jumlah);
@@ -142,15 +136,13 @@ public class TransaksiDAO {
 
         } catch (SQLException e) {
             System.err.println("[TransaksiDAO] addTransaksi: " + e.getMessage());
-            try { conn.rollback(); conn.setAutoCommit(true); } catch (SQLException ex) { /* ignore */ }
+            try { conn.rollback(); conn.setAutoCommit(true); } catch (SQLException ex) {  }
             return false;
         }
     }
 
-    // ── Statistik 24 jam terakhir ─────────────────────────────────────────────
-    /**
-     * @return int[0] = total barang masuk, int[1] = total barang keluar
-     */
+    
+    
     public int[] getStatistik24H() {
         int masuk = 0, keluar = 0;
         String sql = "SELECT tipe, COALESCE(SUM(jumlah), 0) AS total FROM transaksi "
@@ -168,10 +160,8 @@ public class TransaksiDAO {
         return new int[]{masuk, keluar};
     }
 
-    // ── Ringkasan transaksi berdasarkan periode ───────────────────────────────
-    /**
-     * Mengembalikan array: [totalTransaksi, totalMasuk, totalKeluar, barangAktif]
-     */
+    
+    
     public int[] getReportSummary(String startDate, String endDate) {
         int totalTx = 0, totalMasuk = 0, totalKeluar = 0, barangAktif = 0;
         String sql = "SELECT "
@@ -198,7 +188,7 @@ public class TransaksiDAO {
         return new int[]{totalTx, totalMasuk, totalKeluar, barangAktif};
     }
 
-    // ── List transaksi berdasarkan periode + tipe (untuk tabel report) ────────
+    
     public List<Transaksi> getTransaksiByPeriod(String startDate, String endDate, String tipe) {
         List<Transaksi> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
@@ -249,7 +239,7 @@ public class TransaksiDAO {
         return list;
     }
 
-    // ── Model untuk Top Barang ─────────────────────────────────────────────────
+    
     public static class TopBarang {
         public String namaBarang;
         public String kodeBarang;
@@ -264,7 +254,7 @@ public class TransaksiDAO {
         }
     }
 
-    // ── Top barang paling aktif berdasarkan periode ───────────────────────────
+    
     public List<TopBarang> getTopBarang(String startDate, String endDate, int limit) {
         List<TopBarang> list = new ArrayList<>();
         String sql = "SELECT b.nama_barang, b.kode_barang, "
@@ -295,7 +285,7 @@ public class TransaksiDAO {
         return list;
     }
 
-    // ── Helper: generate kode transaksi ───────────────────────────────────────
+    
     private String generateKode(Connection conn) throws SQLException {
         String sql = "SELECT COALESCE(MAX(CAST(SUBSTRING(kode_transaksi, 5) AS UNSIGNED)), 0) "
                    + "FROM transaksi WHERE kode_transaksi REGEXP '^TRX-'";

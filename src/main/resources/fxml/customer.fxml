@@ -8,22 +8,20 @@
       fx:controller="com.mycompany.tugas_akhir.CustomerController"
       spacing="0" style="-fx-background-color: #f8f9fa;">
 
-    <!-- ════════════════════════════════════════════════════════════════════════════
-         HEADER
-         ════════════════════════════════════════════════════════════════════════════ -->
+    
     <VBox spacing="20" style="-fx-padding: 24px;">
         <Label text="Customer" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
 
-        <!-- ── Filter Bar ────────────────────────────────────────────────────────── -->
+        
         <HBox spacing="12" alignment="CENTER_LEFT">
-            <!-- Category Filter -->
+            
             <ComboBox fx:id="cbCategory" 
                       promptText="All"
                       prefWidth="150"
                       styleClass="form-combo"
                       onAction="#handleFilterChange"/>
 
-            <!-- Status Filter -->
+            
             <ComboBox fx:id="cbStatus" 
                       promptText="All status"
                       prefWidth="150"
@@ -32,13 +30,13 @@
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- Add Customer Button -->
+            
             <Button text="➕ Add Customer" 
                     styleClass="btn-primary"
                     onAction="#handleAddCustomer"
                     prefWidth="140"/>
 
-            <!-- Search Field -->
+            
             <TextField fx:id="tfSearch"
                        promptText="Search name, id, company..."
                        styleClass="form-field"
@@ -47,9 +45,7 @@
         </HBox>
     </VBox>
 
-    <!-- ════════════════════════════════════════════════════════════════════════════
-         CUSTOMER CARDS GRID
-         ════════════════════════════════════════════════════════════════════════════ -->
+    
     <ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa; -fx-border-color: transparent;">
         <TilePane fx:id="tileCustomers"
                   prefColumns="3"

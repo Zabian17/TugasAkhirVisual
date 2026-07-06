@@ -13,12 +13,12 @@
               bottomMargin="30"
               uuid="c3000001-0000-0000-0000-000000000001">
 
-    <!-- Parameters -->
+    
     <parameter name="reportTitle" class="java.lang.String"/>
     <parameter name="reportDate" class="java.lang.String"/>
     <parameter name="totalTransaksi" class="java.lang.Integer"/>
 
-    <!-- Fields -->
+    
     <field name="no" class="java.lang.Integer"/>
     <field name="kodeTransaksi" class="java.lang.String"/>
     <field name="namaBarang" class="java.lang.String"/>
@@ -27,10 +27,10 @@
     <field name="jumlah" class="java.lang.Integer"/>
     <field name="tanggal" class="java.lang.String"/>
 
-    <!-- Title Band -->
+    
     <title>
         <band height="70" splitType="Stretch">
-            <!-- Report Title -->
+            
             <staticText>
                 <reportElement uuid="c3000001-0000-0000-0000-000000000010"
                                x="0" y="0" width="535" height="30"/>
@@ -39,7 +39,7 @@
                 </textElement>
                 <text><![CDATA[Laporan Stock Out]]></text>
             </staticText>
-            <!-- Report Date -->
+            
             <textField isBlankWhenNull="true">
                 <reportElement uuid="c3000001-0000-0000-0000-000000000011"
                                x="0" y="32" width="535" height="16"/>
@@ -48,7 +48,7 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$P{reportDate}]]></textFieldExpression>
             </textField>
-            <!-- Total Transaksi -->
+            
             <textField isBlankWhenNull="true">
                 <reportElement uuid="c3000001-0000-0000-0000-000000000012"
                                x="0" y="50" width="535" height="16"/>
@@ -60,10 +60,10 @@
         </band>
     </title>
 
-    <!-- Column Header Band -->
+    
     <columnHeader>
         <band height="22" splitType="Stretch">
-            <!-- # -->
+            
             <staticText>
                 <reportElement uuid="c3000001-0000-0000-0000-000000000020"
                                mode="Opaque" x="0" y="0" width="30" height="22"
@@ -76,7 +76,7 @@
                 </textElement>
                 <text><![CDATA[#]]></text>
             </staticText>
-            <!-- Kode Transaksi -->
+            
             <staticText>
                 <reportElement uuid="c3000001-0000-0000-0000-000000000021"
                                mode="Opaque" x="30" y="0" width="85" height="22"
@@ -89,7 +89,7 @@
                 </textElement>
                 <text><![CDATA[Kode Transaksi]]></text>
             </staticText>
-            <!-- Barang -->
+            
             <staticText>
                 <reportElement uuid="c3000001-0000-0000-0000-000000000022"
                                mode="Opaque" x="115" y="0" width="110" height="22"
@@ -102,7 +102,7 @@
                 </textElement>
                 <text><![CDATA[Barang]]></text>
             </staticText>
-            <!-- Tujuan -->
+            
             <staticText>
                 <reportElement uuid="c3000001-0000-0000-0000-000000000023"
                                mode="Opaque" x="225" y="0" width="100" height="22"
@@ -115,7 +115,7 @@
                 </textElement>
                 <text><![CDATA[Tujuan]]></text>
             </staticText>
-            <!-- Alasan -->
+            
             <staticText>
                 <reportElement uuid="c3000001-0000-0000-0000-000000000024"
                                mode="Opaque" x="325" y="0" width="90" height="22"
@@ -128,7 +128,7 @@
                 </textElement>
                 <text><![CDATA[Alasan]]></text>
             </staticText>
-            <!-- Jumlah -->
+            
             <staticText>
                 <reportElement uuid="c3000001-0000-0000-0000-000000000025"
                                mode="Opaque" x="415" y="0" width="50" height="22"
@@ -141,7 +141,7 @@
                 </textElement>
                 <text><![CDATA[Jumlah]]></text>
             </staticText>
-            <!-- Tanggal -->
+            
             <staticText>
                 <reportElement uuid="c3000001-0000-0000-0000-000000000026"
                                mode="Opaque" x="465" y="0" width="70" height="22"
@@ -157,10 +157,10 @@
         </band>
     </columnHeader>
 
-    <!-- Detail Band -->
+    
     <detail>
         <band height="18" splitType="Stretch">
-            <!-- no -->
+            
             <textField isBlankWhenNull="true">
                 <reportElement uuid="c3000001-0000-0000-0000-000000000030"
                                x="0" y="0" width="30" height="18"/>
@@ -172,7 +172,7 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$F{no}]]></textFieldExpression>
             </textField>
-            <!-- kodeTransaksi -->
+            
             <textField isBlankWhenNull="true">
                 <reportElement uuid="c3000001-0000-0000-0000-000000000031"
                                x="30" y="0" width="85" height="18"/>
@@ -184,7 +184,7 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$F{kodeTransaksi}]]></textFieldExpression>
             </textField>
-            <!-- namaBarang -->
+            
             <textField isBlankWhenNull="true">
                 <reportElement uuid="c3000001-0000-0000-0000-000000000032"
                                x="115" y="0" width="110" height="18"/>
@@ -196,7 +196,7 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$F{namaBarang}]]></textFieldExpression>
             </textField>
-            <!-- tujuan -->
+            
             <textField isBlankWhenNull="true">
                 <reportElement uuid="c3000001-0000-0000-0000-000000000033"
                                x="225" y="0" width="100" height="18"/>
@@ -208,7 +208,7 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$F{tujuan}]]></textFieldExpression>
             </textField>
-            <!-- keterangan (Alasan) -->
+            
             <textField isBlankWhenNull="true">
                 <reportElement uuid="c3000001-0000-0000-0000-000000000034"
                                x="325" y="0" width="90" height="18"/>
@@ -220,7 +220,7 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$F{keterangan}]]></textFieldExpression>
             </textField>
-            <!-- jumlah -->
+            
             <textField isBlankWhenNull="true">
                 <reportElement uuid="c3000001-0000-0000-0000-000000000035"
                                x="415" y="0" width="50" height="18"/>
@@ -232,7 +232,7 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$F{jumlah}]]></textFieldExpression>
             </textField>
-            <!-- tanggal -->
+            
             <textField isBlankWhenNull="true">
                 <reportElement uuid="c3000001-0000-0000-0000-000000000036"
                                x="465" y="0" width="70" height="18"/>
@@ -247,10 +247,10 @@
         </band>
     </detail>
 
-    <!-- Page Footer -->
+    
     <pageFooter>
         <band height="24" splitType="Stretch">
-            <!-- Date on left -->
+            
             <textField>
                 <reportElement uuid="c3000001-0000-0000-0000-000000000040"
                                x="0" y="4" width="200" height="16"/>
@@ -259,7 +259,7 @@
                 </textElement>
                 <textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new java.util.Date())]]></textFieldExpression>
             </textField>
-            <!-- Page number on right -->
+            
             <textField>
                 <reportElement uuid="c3000001-0000-0000-0000-000000000041"
                                x="335" y="4" width="200" height="16"/>

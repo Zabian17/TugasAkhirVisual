@@ -17,11 +17,9 @@ import javafx.stage.Stage;
 
 public class DashboardController implements Initializable {
 
-    // Data user yang sedang login (di-set oleh LoginController)
     private UserDAO.User currentUser;
     private Stage primaryStage;
 
-    // --- Sidebar nav items ---
     @FXML private HBox navDashboard;
     @FXML private HBox navStorage;
     @FXML private HBox navMovements;
@@ -29,81 +27,60 @@ public class DashboardController implements Initializable {
     @FXML private HBox navReport;
     @FXML private HBox navSetting;
 
-    // --- Topbar ---
     @FXML private Label pageTitleLabel;
     @FXML private TextField searchField;
     @FXML private Label topbarAvatarLabel;
     @FXML private ImageView topbarAvatarImg;
     @FXML private StackPane topbarAvatarFallback;
 
-    // --- Activity stats ---
     @FXML private Label lblBarangMasuk;
     @FXML private Label lblBarangKeluar;
 
-    // --- Content area ---
     @FXML private ScrollPane mainScrollPane;
     
-    // --- Current active page ---
     private String currentPage = "dashboard";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Set active nav to Dashboard on load
         setActiveNav("dashboard");
 
-        // Load dummy stats (nanti replace dengan query DB)
         lblBarangMasuk.setText("1,234");
         lblBarangKeluar.setText("900");
         
-        // Load dashboard content initially
         loadDashboardPage();
         
-        // Cache the stage reference from the page title label
         if (pageTitleLabel != null && pageTitleLabel.getScene() != null) {
             primaryStage = (Stage) pageTitleLabel.getScene().getWindow();
         }
     }
 
-    /**
-     * Dipanggil oleh LoginController setelah load FXML.
-     * Menerima data user yang berhasil login.
-     */
     public void initUser(UserDAO.User user) {
         this.currentUser = user;
         if (user != null) {
             updateTopbarAvatar(user);
         }
         
-        // Cache stage after scene is fully loaded
         if (primaryStage == null && pageTitleLabel != null && pageTitleLabel.getScene() != null) {
             primaryStage = (Stage) pageTitleLabel.getScene().getWindow();
         }
     }
 
-    /**
-     * Untuk set user di controller yang baru di-load
-     */
     public void setCurrentUser(UserDAO.User user) {
         initUser(user);
     }
 
-    /**
-     * Set the primary stage reference (called from LoginController)
-     */
+
     public void setPrimaryStage(Stage stage) {
         this.primaryStage = stage;
     }
 
-    /**
-     * Update avatar button di topbar (biasanya dipanggil dari SettingController)
-     * Menampilkan foto profil jika ada, atau menampilkan inisial sebagai fallback
-     */
+
     public void updateTopbarAvatar(UserDAO.User user) {
         if (user == null) return;
 
         String picPath = user.profilePicturePath;
         
-        // Jika ada foto profil yang disimpan
+
         if (picPath != null && !picPath.isBlank()) {
             File f = new File(picPath);
             if (f.exists()) {
@@ -111,11 +88,9 @@ public class DashboardController implements Initializable {
                     Image img = new Image(f.toURI().toString(), 34, 34, true, true);
                     topbarAvatarImg.setImage(img);
                     
-                    // Apply circular clip
                     Circle clip = new Circle(17, 17, 17);
                     topbarAvatarImg.setClip(clip);
                     
-                    // Tampilkan foto, sembunyikan fallback
                     topbarAvatarImg.setVisible(true);
                     topbarAvatarImg.setManaged(true);
                     topbarAvatarFallback.setVisible(false);
@@ -127,7 +102,6 @@ public class DashboardController implements Initializable {
             }
         }
         
-        // Fallback: tampilkan inisial
         topbarAvatarLabel.setText(user.getInitial());
         topbarAvatarImg.setVisible(false);
         topbarAvatarImg.setManaged(false);
@@ -135,16 +109,10 @@ public class DashboardController implements Initializable {
         topbarAvatarFallback.setManaged(true);
     }
 
-    /**
-     * Getter untuk currentPage (digunakan untuk tracking halaman aktif)
-     */
+
     public String getCurrentPage() {
         return currentPage;
     }
-
-    // ============================================================
-    // NAVIGATION HANDLERS
-    // ============================================================
 
     @FXML
     private void handleNavDashboard() {
@@ -220,10 +188,6 @@ public class DashboardController implements Initializable {
         });
     }
 
-    // ============================================================
-    // HELPERS
-    // ============================================================
-
     private void setActiveNav(String active) {
         resetAllNav();
         switch (active) {
@@ -241,7 +205,7 @@ public class DashboardController implements Initializable {
         for (HBox nav : navItems) {
             if (nav != null) {
                 nav.getStyleClass().setAll("nav-item");
-                // reset icon and label styles in each nav item
+                
                 nav.getChildren().forEach(node -> {
                     if (node instanceof Label lbl) {
                         String sc = lbl.getStyleClass().stream().findFirst().orElse("");
@@ -290,9 +254,6 @@ public class DashboardController implements Initializable {
         }
     }
 
-    // ============================================================
-    // PAGE LOADING
-    // ============================================================
 
     private void loadStoragePage() {
         try {
@@ -314,7 +275,6 @@ public class DashboardController implements Initializable {
             );
             VBox movementsPage = loader.load();
             
-            // Pass current user to MovementsController
             MovementsController controller = loader.getController();
             if (controller != null && currentUser != null) {
                 controller.initUser(currentUser);
@@ -334,7 +294,6 @@ public class DashboardController implements Initializable {
             );
             VBox customerPage = loader.load();
 
-            // Pass current user to CustomerController
             CustomerController controller = loader.getController();
             if (controller != null && currentUser != null) {
                 controller.initUser(currentUser);
@@ -354,7 +313,6 @@ public class DashboardController implements Initializable {
             );
             VBox reportPage = loader.load();
 
-            // Pass current user to ReportController
             ReportController controller = loader.getController();
             if (controller != null && currentUser != null) {
                 controller.initUser(currentUser);
@@ -374,7 +332,6 @@ public class DashboardController implements Initializable {
             );
             VBox settingPage = loader.load();
 
-            // Pass current user and dashboard controller to SettingController
             SettingController controller = loader.getController();
             if (controller != null && currentUser != null) {
                 controller.initUser(currentUser);

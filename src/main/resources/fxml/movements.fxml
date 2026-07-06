@@ -9,9 +9,7 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.mycompany.tugas_akhir.MovementsController">
 
-    <!-- ======================================================
-         HEADER BAR
-         ====================================================== -->
+    
     <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 0 0 4 0;">
         <VBox spacing="3">
             <Label text="Movements" styleClass="section-page-title"/>
@@ -19,9 +17,7 @@
         </VBox>
     </HBox>
 
-    <!-- ======================================================
-         TAB BAR NAVIGATION
-         ====================================================== -->
+    
     <HBox spacing="0" style="-fx-background-color: #f3f4f6; -fx-padding: 0 16 0 16; -fx-border-color: #e5e7eb; -fx-border-width: 0 0 1 0;">
         <Button fx:id="btnTabAll" text="All" 
                 styleClass="tab-button" 
@@ -42,13 +38,11 @@
         <Region HBox.hgrow="ALWAYS"/>
     </HBox>
 
-    <!-- ======================================================
-         TAB CONTENT - ALL (Dashboard View)
-         ====================================================== -->
+    
     <VBox fx:id="tabContentAll" spacing="16">
-        <!-- Statistics Cards Row -->
+        
         <HBox spacing="12" style="-fx-padding: 0;">
-            <!-- Total Movements -->
+            
             <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
                 <HBox spacing="8" alignment="TOP_LEFT">
                     <Label text="📊" style="-fx-font-size: 20px;"/>
@@ -60,7 +54,7 @@
                 </HBox>
             </VBox>
 
-            <!-- Stock In -->
+            
             <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
                 <HBox spacing="8" alignment="TOP_LEFT">
                     <Label text="📥" style="-fx-font-size: 20px;"/>
@@ -72,7 +66,7 @@
                 </HBox>
             </VBox>
 
-            <!-- Stock Out -->
+            
             <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
                 <HBox spacing="8" alignment="TOP_LEFT">
                     <Label text="📤" style="-fx-font-size: 20px;"/>
@@ -84,7 +78,7 @@
                 </HBox>
             </VBox>
 
-            <!-- Adjustment -->
+            
             <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
                 <HBox spacing="8" alignment="TOP_LEFT">
                     <Label text="✏️" style="-fx-font-size: 20px;"/>
@@ -97,7 +91,7 @@
             </VBox>
         </HBox>
 
-        <!-- Movement Log Table -->
+        
         <VBox styleClass="card" spacing="12">
             <HBox alignment="CENTER_LEFT" spacing="8">
                 <Label text="📋 Movement Log" styleClass="card-title"/>
@@ -124,17 +118,15 @@
         </VBox>
     </VBox>
 
-    <!-- ======================================================
-         TAB CONTENT - STOCK IN
-         ====================================================== -->
+    
     <HBox fx:id="tabContentStockIn" spacing="16" managed="false" visible="false">
 
-        <!-- ── Left: Form Input ─────────────────────────────── -->
+        
         <VBox spacing="16" style="-fx-pref-width: 320px; -fx-min-width: 300px; -fx-max-width: 340px;">
             <VBox styleClass="card" spacing="14">
                 <Label text="Stock In Form" styleClass="card-title"/>
 
-                <!-- Barang -->
+                
                 <VBox spacing="5">
                     <Label text="Barang *" styleClass="form-label"/>
                     <ComboBox fx:id="cbBarangStockIn"
@@ -144,7 +136,7 @@
                               onAction="#handleBarangChangeStockIn"/>
                 </VBox>
 
-                <!-- Info stok saat ini -->
+                
                 <HBox fx:id="boxInfoStokStockIn" spacing="8" alignment="CENTER_LEFT"
                       style="-fx-background-color: #f0f4ff; -fx-background-radius: 8; -fx-padding: 8 12 8 12;"
                       visible="false" managed="false">
@@ -153,7 +145,7 @@
                            style="-fx-font-size: 12px; -fx-text-fill: #1a56db;"/>
                 </HBox>
 
-                <!-- Supplier -->
+                
                 <VBox spacing="5">
                     <Label text="Supplier" styleClass="form-label"/>
                     <ComboBox fx:id="cbSupplierStockIn"
@@ -162,7 +154,7 @@
                               maxWidth="Infinity"/>
                 </VBox>
 
-                <!-- Jumlah -->
+                
                 <VBox spacing="5">
                     <Label text="Jumlah *" styleClass="form-label"/>
                     <TextField fx:id="tfJumlahStockIn"
@@ -170,7 +162,7 @@
                                styleClass="form-field"/>
                 </VBox>
 
-                <!-- Keterangan -->
+                
                 <VBox spacing="5">
                     <Label text="Keterangan" styleClass="form-label"/>
                     <TextArea fx:id="taKeteranganStockIn"
@@ -180,7 +172,7 @@
                               wrapText="true"/>
                 </VBox>
 
-                <!-- Tombol Submit -->
+                
                 <Button text="💾  Simpan Stock In"
                         styleClass="btn-primary"
                         onAction="#handleSimpanStockIn"
@@ -188,7 +180,7 @@
             </VBox>
         </VBox>
 
-        <!-- ── Right: Riwayat Stock In ─────────────────────── -->
+        
         <VBox spacing="12" HBox.hgrow="ALWAYS">
             <VBox styleClass="card" spacing="12">
                 <HBox alignment="CENTER_LEFT" spacing="8">
@@ -217,17 +209,15 @@
 
     </HBox>
 
-    <!-- ======================================================
-         TAB CONTENT - STOCK OUT
-         ====================================================== -->
+    
     <HBox fx:id="tabContentStockOut" spacing="16" managed="false" visible="false">
 
-        <!-- ── Left: Form Input ─────────────────────────────── -->
+        
         <VBox spacing="16" style="-fx-pref-width: 320px; -fx-min-width: 300px; -fx-max-width: 340px;">
             <VBox styleClass="card" spacing="14">
                 <Label text="Stock Out Form" styleClass="card-title"/>
 
-                <!-- Barang -->
+                
                 <VBox spacing="5">
                     <Label text="Barang *" styleClass="form-label"/>
                     <ComboBox fx:id="cbBarangStockOut"
@@ -237,7 +227,7 @@
                               onAction="#handleBarangChangeStockOut"/>
                 </VBox>
 
-                <!-- Info stok saat ini -->
+                
                 <HBox fx:id="boxInfoStokStockOut" spacing="8" alignment="CENTER_LEFT"
                       style="-fx-background-color: #f0f4ff; -fx-background-radius: 8; -fx-padding: 8 12 8 12;"
                       visible="false" managed="false">
@@ -246,7 +236,7 @@
                            style="-fx-font-size: 12px; -fx-text-fill: #1a56db;"/>
                 </HBox>
 
-                <!-- Tujuan -->
+                
                 <VBox spacing="5">
                     <Label text="Tujuan / Lokasi" styleClass="form-label"/>
                     <TextField fx:id="tfTujuanStockOut"
@@ -254,7 +244,7 @@
                                styleClass="form-field"/>
                 </VBox>
 
-                <!-- Jumlah -->
+                
                 <VBox spacing="5">
                     <Label text="Jumlah *" styleClass="form-label"/>
                     <TextField fx:id="tfJumlahStockOut"
@@ -262,7 +252,7 @@
                                styleClass="form-field"/>
                 </VBox>
 
-                <!-- Keterangan -->
+                
                 <VBox spacing="5">
                     <Label text="Keterangan" styleClass="form-label"/>
                     <TextArea fx:id="taKeteranganStockOut"
@@ -272,7 +262,7 @@
                               wrapText="true"/>
                 </VBox>
 
-                <!-- Tombol Submit -->
+                
                 <Button text="💾  Simpan Stock Out"
                         styleClass="btn-primary"
                         onAction="#handleSimpanStockOut"
@@ -280,7 +270,7 @@
             </VBox>
         </VBox>
 
-        <!-- ── Right: Riwayat Stock Out ─────────────────────── -->
+        
         <VBox spacing="12" HBox.hgrow="ALWAYS">
             <VBox styleClass="card" spacing="12">
                 <HBox alignment="CENTER_LEFT" spacing="8">
@@ -309,17 +299,15 @@
 
     </HBox>
 
-    <!-- ======================================================
-         TAB CONTENT - ADJUSTMENT
-         ====================================================== -->
+    
     <HBox fx:id="tabContentAdjustment" spacing="16" managed="false" visible="false">
 
-        <!-- ── Left: Form Input ─────────────────────────────── -->
+        
         <VBox spacing="16" style="-fx-pref-width: 320px; -fx-min-width: 300px; -fx-max-width: 340px;">
             <VBox styleClass="card" spacing="14">
                 <Label text="Adjustment Form" styleClass="card-title"/>
 
-                <!-- Barang -->
+                
                 <VBox spacing="5">
                     <Label text="Barang *" styleClass="form-label"/>
                     <ComboBox fx:id="cbBarangAdjustment"
@@ -329,7 +317,7 @@
                               onAction="#handleBarangChangeAdjustment"/>
                 </VBox>
 
-                <!-- Info stok saat ini -->
+                
                 <HBox fx:id="boxInfoStokAdjustment" spacing="8" alignment="CENTER_LEFT"
                       style="-fx-background-color: #f0f4ff; -fx-background-radius: 8; -fx-padding: 8 12 8 12;"
                       visible="false" managed="false">
@@ -338,7 +326,7 @@
                            style="-fx-font-size: 12px; -fx-text-fill: #1a56db;"/>
                 </HBox>
 
-                <!-- Stok Baru -->
+                
                 <VBox spacing="5">
                     <Label text="Stok Baru *" styleClass="form-label"/>
                     <TextField fx:id="tfStokBaruAdjustment"
@@ -346,7 +334,7 @@
                                styleClass="form-field"/>
                 </VBox>
 
-                <!-- Alasan Penyesuaian -->
+                
                 <VBox spacing="5">
                     <Label text="Alasan Penyesuaian *" styleClass="form-label"/>
                     <ComboBox fx:id="cbAlasanAdjustment"
@@ -355,7 +343,7 @@
                               maxWidth="Infinity"/>
                 </VBox>
 
-                <!-- Keterangan -->
+                
                 <VBox spacing="5">
                     <Label text="Keterangan" styleClass="form-label"/>
                     <TextArea fx:id="taKeteranganAdjustment"
@@ -365,7 +353,7 @@
                               wrapText="true"/>
                 </VBox>
 
-                <!-- Tombol Submit -->
+                
                 <Button text="💾  Simpan Adjustment"
                         styleClass="btn-primary"
                         onAction="#handleSimpanAdjustment"
@@ -373,7 +361,7 @@
             </VBox>
         </VBox>
 
-        <!-- ── Right: Riwayat Adjustment ─────────────────────── -->
+        
         <VBox spacing="12" HBox.hgrow="ALWAYS">
             <VBox styleClass="card" spacing="12">
                 <HBox alignment="CENTER_LEFT" spacing="8">

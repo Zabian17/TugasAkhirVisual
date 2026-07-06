@@ -10,14 +10,14 @@
               leftMargin="30" rightMargin="30" topMargin="30" bottomMargin="30"
               uuid="b2c3d4e5-f6a7-8901-bcde-f12345678901">
 
-    <!-- Parameters -->
+    
     <parameter name="reportDate" class="java.lang.String"/>
     <parameter name="totalBarang" class="java.lang.Integer"/>
     <parameter name="inStock" class="java.lang.Long"/>
     <parameter name="lowStock" class="java.lang.Long"/>
     <parameter name="outOfStock" class="java.lang.Long"/>
 
-    <!-- Fields -->
+    
     <field name="no" class="java.lang.Integer"/>
     <field name="itemSku" class="java.lang.String"/>
     <field name="kategori" class="java.lang.String"/>
@@ -27,7 +27,7 @@
     <field name="status" class="java.lang.String"/>
     <field name="lastUpdate" class="java.lang.String"/>
 
-    <!-- Title Band -->
+    
     <title>
         <band height="85">
             <staticText>
@@ -54,7 +54,7 @@
         </band>
     </title>
 
-    <!-- Column Header -->
+    
     <columnHeader>
         <band height="25">
             <staticText>
@@ -124,7 +124,7 @@
         </band>
     </columnHeader>
 
-    <!-- Detail Band -->
+    
     <detail>
         <band height="18">
             <textField>
@@ -194,7 +194,7 @@
         </band>
     </detail>
 
-    <!-- Page Footer -->
+    
     <pageFooter>
         <band height="30">
             <textField>

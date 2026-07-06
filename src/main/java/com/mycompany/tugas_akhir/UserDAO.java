@@ -2,21 +2,18 @@ package com.mycompany.tugas_akhir;
 
 import java.sql.*;
 
-/**
- * Data Access Object untuk tabel `users`.
- * Menangani registrasi, autentikasi login, dan manajemen profil.
- */
+
 public class UserDAO {
 
-    // ── Model user lengkap ────────────────────────────────────────────────────
+    
     public static class User {
         public int    id;
         public String fullName;
-        public String displayName;       // nama tampilan (bisa null)
+        public String displayName;       
         public String email;
-        public String phone;             // nomor telepon (bisa null)
-        public String bio;               // bio singkat (bisa null)
-        public String profilePicturePath; // path file foto (bisa null)
+        public String phone;             
+        public String bio;               
+        public String profilePicturePath; 
         public String role;
 
         public User(int id, String fullName, String displayName, String email,
@@ -31,17 +28,17 @@ public class UserDAO {
             this.role                = role;
         }
 
-        /** Constructor backward-compatible (login lama cukup 4 field) */
+        
         public User(int id, String fullName, String email, String role) {
             this(id, fullName, null, email, null, null, null, role);
         }
 
-        /** Nama yang ditampilkan: display_name jika ada, fallback ke full_name */
+        
         public String getEffectiveName() {
             return (displayName != null && !displayName.isBlank()) ? displayName : fullName;
         }
 
-        /** Inisial untuk avatar (1 huruf dari effective name) */
+        
         public String getInitial() {
             String name = getEffectiveName();
             return (name != null && !name.isEmpty())
@@ -50,11 +47,8 @@ public class UserDAO {
         }
     }
 
-    // ── Registrasi ────────────────────────────────────────────────────────────
-    /**
-     * Mendaftarkan user baru ke database.
-     * @return true jika berhasil, false jika email sudah terdaftar atau error.
-     */
+    
+    
     public boolean register(String fullName, String email, String plainPassword) {
         if (emailExists(email)) return false;
 
@@ -73,11 +67,8 @@ public class UserDAO {
         }
     }
 
-    // ── Login ─────────────────────────────────────────────────────────────────
-    /**
-     * Memvalidasi login user.
-     * @return objek User jika berhasil login, null jika gagal
-     */
+    
+    
     public User login(String emailOrUsername, String plainPassword) {
         Connection conn = DatabaseConnection.getInstance().getConnection();
         if (conn == null) {
@@ -108,7 +99,7 @@ public class UserDAO {
         return null;
     }
 
-    // ── Ambil data user lengkap berdasarkan ID ────────────────────────────────
+    
     public User getUserById(int id) {
         String sql = "SELECT id, full_name, display_name, email, phone, bio, "
                    + "profile_picture_path, role FROM users WHERE id = ?";
@@ -123,10 +114,8 @@ public class UserDAO {
         return null;
     }
 
-    // ── Update data profil (tanpa password & email) ───────────────────────────
-    /**
-     * @return true jika update berhasil
-     */
+    
+    
     public boolean updateProfile(int id, String fullName, String displayName,
                                  String phone, String bio) {
         String sql = "UPDATE users SET full_name=?, display_name=?, phone=?, bio=?, "
@@ -147,7 +136,7 @@ public class UserDAO {
         }
     }
 
-    // ── Update path foto profil ───────────────────────────────────────────────
+    
     public boolean updateProfilePicture(int id, String picturePath) {
         String sql = "UPDATE users SET profile_picture_path=?, updated_at=CURRENT_TIMESTAMP WHERE id=?";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
@@ -163,13 +152,10 @@ public class UserDAO {
         }
     }
 
-    // ── Ganti password ────────────────────────────────────────────────────────
-    /**
-     * Verifikasi password lama dulu, baru update ke password baru.
-     * @return true jika berhasil, false jika password lama salah / error
-     */
+    
+    
     public boolean changePassword(int userId, String oldPassword, String newPassword) {
-        // 1. Ambil hash saat ini
+        
         String sqlGet = "SELECT password_hash FROM users WHERE id=?";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement psGet = conn.prepareStatement(sqlGet)) {
@@ -183,7 +169,7 @@ public class UserDAO {
                 return false;
             }
 
-            // 2. Update ke password baru
+            
             String newHash = PasswordHelper.hashPassword(newPassword);
             String sqlUp = "UPDATE users SET password_hash=?, updated_at=CURRENT_TIMESTAMP WHERE id=?";
             try (PreparedStatement psUp = conn.prepareStatement(sqlUp)) {
@@ -199,7 +185,7 @@ public class UserDAO {
         }
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
+    
     public boolean emailExists(String email) {
         String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
@@ -213,7 +199,7 @@ public class UserDAO {
         return false;
     }
 
-    /** Map ResultSet yang sudah include password_hash */
+    
     private User mapRow(ResultSet rs) throws SQLException {
         return new User(
             rs.getInt("id"),
@@ -227,7 +213,7 @@ public class UserDAO {
         );
     }
 
-    /** Map ResultSet tanpa kolom password_hash (untuk getUserById) */
+    
     private User mapRowNoPassword(ResultSet rs) throws SQLException {
         return new User(
             rs.getInt("id"),

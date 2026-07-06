@@ -11,10 +11,10 @@
       xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1">
 
-    <!-- ============ ROW 1: Section Overview + Recent Activity ============ -->
+    
     <HBox spacing="16">
 
-        <!-- Section Overview Card -->
+        
         <VBox styleClass="card" spacing="12" HBox.hgrow="ALWAYS">
 
             <HBox alignment="CENTER_LEFT" spacing="8">
@@ -22,10 +22,10 @@
                 <Region HBox.hgrow="ALWAYS"/>
             </HBox>
 
-            <!-- 3 sections in one row -->
+            
             <HBox spacing="12" alignment="TOP_CENTER">
 
-                <!-- Section A -->
+                
                 <VBox spacing="6" alignment="TOP_CENTER" HBox.hgrow="ALWAYS">
                     <Label text="Section A" styleClass="section-header"/>
                     <Label text="2/12" styleClass="section-sub"/>
@@ -45,7 +45,7 @@
                     </GridPane>
                 </VBox>
 
-                <!-- Section B -->
+                
                 <VBox spacing="6" alignment="TOP_CENTER" HBox.hgrow="ALWAYS">
                     <Label text="Section B" styleClass="section-header"/>
                     <Label text="4/12" styleClass="section-sub"/>
@@ -65,7 +65,7 @@
                     </GridPane>
                 </VBox>
 
-                <!-- Section C -->
+                
                 <VBox spacing="6" alignment="TOP_CENTER" HBox.hgrow="ALWAYS">
                     <Label text="Section C" styleClass="section-header"/>
                     <Label text="12/12" styleClass="section-sub"/>
@@ -88,10 +88,10 @@
             </HBox>
         </VBox>
 
-        <!-- Right column: Recent Activity + Recent Transaction + Top Movers -->
+        
         <VBox spacing="16" style="-fx-pref-width: 340px; -fx-min-width: 320px; -fx-max-width: 360px;">
 
-            <!-- Recent Activity Card -->
+            
             <VBox styleClass="card" spacing="12">
                 <HBox alignment="CENTER_LEFT" spacing="8">
                     <Label text="Recent Activity  🕐" styleClass="card-title"/>
@@ -100,7 +100,7 @@
                 </HBox>
 
                 <HBox spacing="12" alignment="CENTER_LEFT">
-                    <!-- Barang Masuk -->
+                    
                     <VBox styleClass="activity-card-in" spacing="4">
                         <HBox alignment="CENTER_LEFT" spacing="8">
                             <Label text="📦" styleClass="activity-icon-in"/>
@@ -110,7 +110,7 @@
                         <Label text="Barang Masuk" styleClass="activity-label"/>
                     </VBox>
 
-                    <!-- Barang Keluar -->
+                    
                     <VBox styleClass="activity-card-out" spacing="4">
                         <HBox alignment="CENTER_LEFT" spacing="8">
                             <Label text="🚚" styleClass="activity-icon-out"/>
@@ -122,7 +122,7 @@
                 </HBox>
             </VBox>
 
-            <!-- Recent Transaction Card -->
+            
             <VBox styleClass="card" spacing="10" VBox.vgrow="ALWAYS">
                 <HBox alignment="CENTER_LEFT" spacing="8">
                     <Label text="Recent Transaction  🖨" styleClass="card-title"/>
@@ -130,7 +130,7 @@
                     <Label text="24H" styleClass="card-badge"/>
                 </HBox>
 
-                <!-- Table Header -->
+                
                 <HBox spacing="0">
                     <Label text="Barang" styleClass="table-header-label" style="-fx-pref-width: 80px;"/>
                     <Label text="Supplier" styleClass="table-header-label" style="-fx-pref-width: 80px;"/>
@@ -138,7 +138,7 @@
                     <Label text="" styleClass="table-header-label" style="-fx-pref-width: 24px;"/>
                 </HBox>
 
-                <!-- Row 1 -->
+                
                 <HBox spacing="0" alignment="CENTER_LEFT">
                     <Label text="Barang A" styleClass="table-cell-label" style="-fx-pref-width: 80px;"/>
                     <Label text="PT. Dua" styleClass="table-cell-label" style="-fx-pref-width: 80px;"/>
@@ -147,7 +147,7 @@
                 </HBox>
                 <Pane styleClass="table-row-separator"/>
 
-                <!-- Row 2 -->
+                
                 <HBox spacing="0" alignment="CENTER_LEFT">
                     <Label text="Barang B" styleClass="table-cell-label" style="-fx-pref-width: 80px;"/>
                     <Label text="PT. Satu" styleClass="table-cell-label" style="-fx-pref-width: 80px;"/>
@@ -156,7 +156,7 @@
                 </HBox>
                 <Pane styleClass="table-row-separator"/>
 
-                <!-- Row 3 -->
+                
                 <HBox spacing="0" alignment="CENTER_LEFT">
                     <Label text="Barang C" styleClass="table-cell-label" style="-fx-pref-width: 80px;"/>
                     <Label text="PT. Dua" styleClass="table-cell-label" style="-fx-pref-width: 80px;"/>
@@ -165,7 +165,7 @@
                 </HBox>
                 <Pane styleClass="table-row-separator"/>
 
-                <!-- Row 4 -->
+                
                 <HBox spacing="0" alignment="CENTER_LEFT">
                     <Label text="Barang D" styleClass="table-cell-label" style="-fx-pref-width: 80px;"/>
                     <Label text="PT. Empat" styleClass="table-cell-label" style="-fx-pref-width: 80px;"/>
@@ -174,7 +174,7 @@
                 </HBox>
                 <Pane styleClass="table-row-separator"/>
 
-                <!-- Row 5 -->
+                
                 <HBox spacing="0" alignment="CENTER_LEFT">
                     <Label text="Barang E" styleClass="table-cell-label" style="-fx-pref-width: 80px;"/>
                     <Label text="PT. Tiga" styleClass="table-cell-label" style="-fx-pref-width: 80px;"/>
@@ -183,7 +183,7 @@
                 </HBox>
             </VBox>
 
-            <!-- Top Movers Card -->
+            
             <VBox styleClass="card" spacing="10">
                 <HBox alignment="CENTER_LEFT" spacing="8">
                     <Label text="Top Movers  🔄" styleClass="card-title"/>
@@ -210,7 +210,7 @@
         </VBox>
     </HBox>
 
-    <!-- ============ ROW 2: Storage Alert ============ -->
+    
     <VBox styleClass="card" spacing="12">
         <HBox alignment="CENTER_LEFT" spacing="8">
             <Label text="Storage Alert  🖥" styleClass="card-title"/>
@@ -218,7 +218,7 @@
 
         <HBox spacing="32" alignment="CENTER_LEFT">
 
-            <!-- Rak A-01: 95% WARN -->
+            
             <HBox spacing="12" alignment="CENTER_LEFT">
                 <VBox spacing="1">
                     <Label text="Rak" styleClass="alert-rak-label"/>
@@ -228,10 +228,10 @@
                 <Label text="⚠" styleClass="alert-warn"/>
             </HBox>
 
-            <!-- Separator -->
+            
             <Pane style="-fx-background-color: #e2e6ef; -fx-pref-width:1px; -fx-min-width:1px; -fx-max-width:1px; -fx-pref-height:32px;"/>
 
-            <!-- Rak B-01: 100% DANGER -->
+            
             <HBox spacing="12" alignment="CENTER_LEFT">
                 <VBox spacing="1">
                     <Label text="Rak" styleClass="alert-rak-label"/>
@@ -241,10 +241,10 @@
                 <Label text="✖" styleClass="alert-danger"/>
             </HBox>
 
-            <!-- Separator -->
+            
             <Pane style="-fx-background-color: #e2e6ef; -fx-pref-width:1px; -fx-min-width:1px; -fx-max-width:1px; -fx-pref-height:32px;"/>
 
-            <!-- Rak C-01: 45% OK -->
+            
             <HBox spacing="12" alignment="CENTER_LEFT">
                 <VBox spacing="1">
                     <Label text="Rak" styleClass="alert-rak-label"/>

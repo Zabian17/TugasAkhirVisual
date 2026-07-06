@@ -4,13 +4,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object untuk tabel `supplier`.
- * Digunakan untuk mengisi dropdown supplier pada form transaksi.
- */
+
 public class SupplierDAO {
 
-    // ── Model ─────────────────────────────────────────────────────────────────
+    
     public static class Supplier {
         public int    id;
         public String namaSupplier;
@@ -30,7 +27,7 @@ public class SupplierDAO {
         }
     }
 
-    // ── Ambil semua supplier ──────────────────────────────────────────────────
+    
     public List<Supplier> getAllSupplier() {
         List<Supplier> list = new ArrayList<>();
         String sql = "SELECT id, nama_supplier, kontak, email FROM supplier ORDER BY nama_supplier";

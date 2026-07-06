@@ -4,13 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Singleton class untuk mengelola koneksi ke database MySQL.
- * Gunakan DatabaseConnection.getInstance().getConnection() untuk mendapat koneksi.
- */
+
 public class DatabaseConnection {
 
-    // ── Konfigurasi Database ──────────────────────────────────────────────────
     private static final String HOST     = "localhost";
     private static final String PORT     = "3306";
     private static final String DATABASE = "gudang_akhir";
@@ -21,7 +17,6 @@ public class DatabaseConnection {
             "jdbc:mysql://" + HOST + ":" + PORT + "/" + DATABASE
             + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Jakarta";
 
-    // ── Singleton ─────────────────────────────────────────────────────────────
     private static DatabaseConnection instance;
     private Connection connection;
 
@@ -29,9 +24,7 @@ public class DatabaseConnection {
         connect();
     }
 
-    /**
-     * Mengembalikan instance tunggal DatabaseConnection.
-     */
+
     public static DatabaseConnection getInstance() {
         if (instance == null) {
             instance = new DatabaseConnection();
@@ -39,7 +32,6 @@ public class DatabaseConnection {
         return instance;
     }
 
-    // ── Koneksi ───────────────────────────────────────────────────────────────
 
     private void connect() {
         try {
@@ -56,10 +48,7 @@ public class DatabaseConnection {
         }
     }
 
-    /**
-     * Mengembalikan objek Connection.
-     * Akan reconnect otomatis jika koneksi terputus.
-     */
+
     public Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
@@ -72,9 +61,7 @@ public class DatabaseConnection {
         return connection;
     }
 
-    /**
-     * Menutup koneksi database (panggil saat aplikasi ditutup).
-     */
+
     public void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {
@@ -86,9 +73,7 @@ public class DatabaseConnection {
         }
     }
 
-    /**
-     * Cek apakah koneksi database aktif
-     */
+
     public boolean isConnected() {
         try {
             return connection != null && !connection.isClosed();

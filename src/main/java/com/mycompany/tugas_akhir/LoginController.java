@@ -87,7 +87,6 @@ public class LoginController implements Initializable {
         if (success) {
             showAlert(Alert.AlertType.INFORMATION, "Berhasil",
                     "Akun berhasil dibuat!\nSilakan sign in dengan email Anda.");
-            // Bersihkan form
             tfFullName.clear();
             tfEmail.clear();
             pfPassword.clear();
@@ -108,7 +107,6 @@ public class LoginController implements Initializable {
             return;
         }
 
-        // Cek koneksi database
         if (!DatabaseConnection.getInstance().isConnected()) {
             showAlert(Alert.AlertType.ERROR, "Koneksi Database Error",
                     "Tidak dapat terhubung ke database.\n\n" +
@@ -135,18 +133,15 @@ public class LoginController implements Initializable {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/fxml/dashboard.fxml")
             );
-            // Load FXML dulu sebelum ambil controller
             Scene scene = new Scene(loader.load(), 1200, 720);
 
-            // Kirim data user yang login ke DashboardController
             DashboardController dashCtrl = loader.getController();
             
             Stage stage = (Stage) tfLoginEmail.getScene().getWindow();
             stage.setTitle("GudangKu - Dashboard");
             stage.setResizable(true);
             stage.setScene(scene);
-            
-            // Pass stage reference to dashboard controller BEFORE show()
+
             dashCtrl.setPrimaryStage(stage);
             dashCtrl.initUser(user);
             

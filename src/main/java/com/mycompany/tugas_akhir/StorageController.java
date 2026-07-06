@@ -14,16 +14,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 
-/**
- * Controller untuk halaman Storage (Manajemen Barang).
- * Fitur: Tampil daftar barang, Tambah, Edit, Hapus, Search real-time.
- */
+
 public class StorageController implements Initializable {
 
     private final BarangDAO barangDAO = new BarangDAO();
     private final ObservableList<BarangDAO.Barang> barangList = FXCollections.observableArrayList();
 
-    // ── FXML Refs ─────────────────────────────────────────────────────────────
+    
     @FXML private TextField  searchField;
     @FXML private ComboBox<String> comboFilter1;
     @FXML private ComboBox<String> comboStatusFilter;
@@ -44,7 +41,7 @@ public class StorageController implements Initializable {
     @FXML private TableColumn<BarangDAO.Barang, String>   colStatus;
     @FXML private TableColumn<BarangDAO.Barang, String>   colLastUpdate;
 
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initializeFilters();
@@ -65,12 +62,12 @@ public class StorageController implements Initializable {
     }
 
     private void setupColumns() {
-        // Nomor urut
+        
         colNo.setCellValueFactory(data ->
             new SimpleIntegerProperty(tableBarang.getItems().indexOf(data.getValue()) + 1));
         colNo.setSortable(false);
 
-        // Kode + Nama dalam satu kolom
+        
         colKode.setCellValueFactory(d -> new SimpleStringProperty(
             d.getValue().kodeBarang + " • " + d.getValue().namaBarang));
 
@@ -107,11 +104,11 @@ public class StorageController implements Initializable {
             }
         });
 
-        // Min / Max dalam satu kolom
+        
         colStokMin.setCellValueFactory(d -> new SimpleStringProperty(
             d.getValue().stokMin + " / " + d.getValue().stokMax));
 
-        // Kolom Status dengan 3 kategori: In Stock, Low Stock, No Stock
+        
         colStatus.setCellValueFactory(d -> {
             BarangDAO.Barang b = d.getValue();
             if (b.stok <= 0)                return new SimpleStringProperty("No Stock");
@@ -135,7 +132,7 @@ public class StorageController implements Initializable {
             }
         });
 
-        // Last Update - format timestamp
+        
         colLastUpdate.setCellValueFactory(d -> {
             long timestamp = d.getValue().lastUpdate;
             String formatted = formatLastUpdate(timestamp);
@@ -145,7 +142,7 @@ public class StorageController implements Initializable {
         tableBarang.setItems(barangList);
     }
 
-    // ── Load Data ─────────────────────────────────────────────────────────────
+    
     private void loadData() {
         barangList.setAll(barangDAO.getAllBarang());
         updateStats();
@@ -162,7 +159,7 @@ public class StorageController implements Initializable {
         lblStokHabis.setText(String.valueOf(habis));
     }
 
-    // ── FXML Handlers ─────────────────────────────────────────────────────────
+    
     @FXML
     private void handleSearch() {
         String kw = searchField.getText().trim();
@@ -196,7 +193,7 @@ public class StorageController implements Initializable {
         }
     }
 
-    // ── Dialog Tambah / Edit ──────────────────────────────────────────────────
+    
     private void showBarangDialog(BarangDAO.Barang existing) {
         boolean isEdit = existing != null;
 
@@ -205,7 +202,7 @@ public class StorageController implements Initializable {
         dlg.getDialogPane().getStylesheets().add(
             getClass().getResource("/css/dashboard.css").toExternalForm());
 
-        // Grid form
+        
         GridPane grid = new GridPane();
         grid.setHgap(12);
         grid.setVgap(14);
@@ -217,7 +214,7 @@ public class StorageController implements Initializable {
         c1.setHgrow(Priority.ALWAYS);
         grid.getColumnConstraints().addAll(c0, c1);
 
-        // Fields
+        
         TextField tfKode = styledField(isEdit ? existing.kodeBarang : barangDAO.generateKodeBarang());
         tfKode.setEditable(!isEdit);
         if (isEdit) tfKode.setStyle("-fx-background-color: #f0f2f5; -fx-text-fill: #9ba3b8; "
@@ -247,12 +244,12 @@ public class StorageController implements Initializable {
         dlg.getDialogPane().setContent(grid);
         dlg.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        // Style tombol OK
+        
         Button okBtn = (Button) dlg.getDialogPane().lookupButton(ButtonType.OK);
         okBtn.setText(isEdit ? "💾  Simpan" : "➕  Tambah");
         okBtn.getStyleClass().add("btn-primary");
 
-        // Handle result
+        
         Optional<ButtonType> result = dlg.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             String nama = tfNama.getText().trim();
@@ -288,7 +285,7 @@ public class StorageController implements Initializable {
         }
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
+    
     private TextField styledField(String value) {
         TextField tf = new TextField(value);
         tf.getStyleClass().add("form-field");
@@ -311,7 +308,7 @@ public class StorageController implements Initializable {
         alert.showAndWait();
     }
 
-    // ── Format Last Update Time ────────────────────────────────────────────────
+    
     private String formatLastUpdate(long timestamp) {
         if (timestamp == 0) return "-";
         long now = System.currentTimeMillis();

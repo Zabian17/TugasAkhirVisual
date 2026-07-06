@@ -10,20 +10,16 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.mycompany.tugas_akhir.StorageController">
 
-    <!-- ======================================================
-         HEADER
-         ====================================================== -->
+    
     <VBox spacing="2" style="-fx-padding: 0;">
         <Label text="Manajemen Barang" styleClass="section-page-title"/>
         <Label text="Kelola data master barang yang tersimpan di gudang" styleClass="section-page-sub"/>
     </VBox>
 
-    <!-- ======================================================
-         STATISTICS CARDS (4 columns)
-         ====================================================== -->
+    
     <HBox spacing="12" style="-fx-padding: 0;">
         
-        <!-- Total SKUs Card -->
+        
         <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
             <HBox spacing="8" alignment="TOP_LEFT">
                 <Label text="📦" style="-fx-font-size: 20px;"/>
@@ -35,7 +31,7 @@
             </HBox>
         </VBox>
 
-        <!-- In Stock Card -->
+        
         <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
             <HBox spacing="8" alignment="TOP_LEFT">
                 <Label text="✅" style="-fx-font-size: 20px;"/>
@@ -47,7 +43,7 @@
             </HBox>
         </VBox>
 
-        <!-- Low Stock Card -->
+        
         <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
             <HBox spacing="8" alignment="TOP_LEFT">
                 <Label text="⚠️" style="-fx-font-size: 20px;"/>
@@ -59,7 +55,7 @@
             </HBox>
         </VBox>
 
-        <!-- Out of Stock Card -->
+        
         <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
             <HBox spacing="8" alignment="TOP_LEFT">
                 <Label text="❌" style="-fx-font-size: 20px;"/>
@@ -72,12 +68,10 @@
         </VBox>
     </HBox>
 
-    <!-- ======================================================
-         SECTION CARDS
-         ====================================================== -->
+    
     <HBox spacing="12" style="-fx-padding: 0;">
         
-        <!-- Section A -->
+        
         <VBox styleClass="section-card" spacing="4" HBox.hgrow="ALWAYS">
             <HBox alignment="CENTER_LEFT" spacing="8">
                 <VBox spacing="2">
@@ -90,7 +84,7 @@
             </HBox>
         </VBox>
 
-        <!-- Section B -->
+        
         <VBox styleClass="section-card" spacing="4" HBox.hgrow="ALWAYS">
             <HBox alignment="CENTER_LEFT" spacing="8">
                 <VBox spacing="2">
@@ -103,7 +97,7 @@
             </HBox>
         </VBox>
 
-        <!-- Section C -->
+        
         <VBox styleClass="section-card" spacing="4" HBox.hgrow="ALWAYS">
             <HBox alignment="CENTER_LEFT" spacing="8">
                 <VBox spacing="2">
@@ -117,12 +111,10 @@
         </VBox>
     </HBox>
 
-    <!-- ======================================================
-         FILTER SECTION
-         ====================================================== -->
+    
     <VBox styleClass="card" spacing="12" style="-fx-padding: 16;">
         
-        <!-- Filter Title & Buttons -->
+        
         <HBox alignment="CENTER_LEFT" spacing="12">
             <Label text="📋 Inventory Filter" style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
@@ -130,7 +122,7 @@
             <Button text="➕ add item" styleClass="btn-primary-small" style="-fx-font-size: 11px; -fx-padding: 6 16 6 16; -fx-background-color: #3b82f6;" onAction="#handleTambah"/>
         </HBox>
 
-        <!-- Search & Filters -->
+        
         <HBox spacing="12" alignment="CENTER_LEFT">
             <TextField promptText="🔍  Search name, SKU, rack, code..."
                        styleClass="search-box"
@@ -146,9 +138,7 @@
         </HBox>
     </VBox>
 
-    <!-- ======================================================
-         DATA TABLE
-         ====================================================== -->
+    
     <VBox styleClass="card" spacing="12" style="-fx-padding: 0; -fx-background-color: transparent;">
         
         <TableView fx:id="tableBarang" prefHeight="400" styleClass="data-table">

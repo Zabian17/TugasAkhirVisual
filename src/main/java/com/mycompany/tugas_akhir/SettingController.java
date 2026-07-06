@@ -17,36 +17,33 @@ import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-/**
- * Controller untuk halaman Setting.
- * Mengelola edit profil, upload foto, dan ganti password.
- */
+
 public class SettingController implements Initializable {
 
-    // ── DAO ───────────────────────────────────────────────────────────────────
+    
     private final UserDAO userDAO = new UserDAO();
 
-    // ── State ─────────────────────────────────────────────────────────────────
+    
     private UserDAO.User currentUser;
     private String pendingPicturePath = null;
-    private DashboardController dashboardController; // referensi untuk update topbar
+    private DashboardController dashboardController; 
 
-    // ── FXML: Tab bar ─────────────────────────────────────────────────────────
+    
     @FXML private Button btnTabProfile;
     @FXML private Button btnTabSecurity;
 
-    // ── FXML: Tab panels ─────────────────────────────────────────────────────
+    
     @FXML private HBox tabProfile;
     @FXML private HBox tabSecurity;
 
-    // ── FXML: Avatar ──────────────────────────────────────────────────────────
+    
     @FXML private StackPane avatarStack;
     @FXML private ImageView imgAvatar;
     @FXML private StackPane avatarFallback;
     @FXML private Label     lblAvatarInitial;
     @FXML private Button    btnHapusFoto;
 
-    // ── FXML: Info singkat ────────────────────────────────────────────────────
+    
     @FXML private Label lblProfileName;
     @FXML private Label lblProfileRole;
     @FXML private Label lblProfileEmail;
@@ -54,7 +51,7 @@ public class SettingController implements Initializable {
     @FXML private Label lblInfoRole;
     @FXML private Label lblInfoSince;
 
-    // ── FXML: Form profil ─────────────────────────────────────────────────────
+    
     @FXML private TextField tfFullName;
     @FXML private TextField tfDisplayName;
     @FXML private TextField tfEmail;
@@ -62,7 +59,7 @@ public class SettingController implements Initializable {
     @FXML private TextArea  taBio;
     @FXML private Label     lblSaveStatus;
 
-    // ── FXML: Password ────────────────────────────────────────────────────────
+    
     @FXML private PasswordField pfOldPassword;
     @FXML private PasswordField pfNewPassword;
     @FXML private PasswordField pfConfirmPassword;
@@ -70,13 +67,13 @@ public class SettingController implements Initializable {
     @FXML private Label         lblConfirmMatch;
     @FXML private Pane          bar1, bar2, bar3, bar4;
 
-    // ── Initialize ────────────────────────────────────────────────────────────
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Default tab: Profile
+        
         showTab("profile");
 
-        // Listener konfirmasi password
+        
         pfConfirmPassword.setOnKeyReleased(e -> checkPasswordMatch());
         pfNewPassword.setOnKeyReleased(e -> {
             updateStrengthBar(pfNewPassword.getText());
@@ -84,13 +81,11 @@ public class SettingController implements Initializable {
         });
     }
 
-    /**
-     * Dipanggil oleh DashboardController setelah load FXML.
-     */
+    
     public void initUser(UserDAO.User user) {
         this.currentUser = user;
         if (user != null) {
-            // Muat data fresh dari DB untuk pastikan lengkap
+            
             UserDAO.User fresh = userDAO.getUserById(user.id);
             if (fresh != null) this.currentUser = fresh;
             populateProfileForm();
@@ -98,14 +93,12 @@ public class SettingController implements Initializable {
         }
     }
 
-    /**
-     * Set referensi DashboardController untuk sinkronisasi avatar topbar.
-     */
+    
     public void setDashboardController(DashboardController dc) {
         this.dashboardController = dc;
     }
 
-    // ── Tab Navigation ────────────────────────────────────────────────────────
+    
 
     @FXML
     private void handleTabProfile() {
@@ -135,7 +128,7 @@ public class SettingController implements Initializable {
         }
     }
 
-    // ── Profile Tab Handlers ──────────────────────────────────────────────────
+    
 
     @FXML
     private void handleUploadPhoto() {
@@ -151,29 +144,29 @@ public class SettingController implements Initializable {
 
         if (selectedFile != null) {
             try {
-                // Buat folder penyimpanan avatar
+                
                 File avatarDir = new File(System.getProperty("user.home"), ".gudangku/avatars");
                 avatarDir.mkdirs();
 
-                // Copy file ke folder avatar dengan nama berdasarkan user id
+                
                 String ext = getFileExtension(selectedFile.getName());
                 File destFile = new File(avatarDir, "user_" + currentUser.id + "." + ext);
                 Files.copy(selectedFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
                 pendingPicturePath = destFile.getAbsolutePath();
 
-                // Preview langsung
+                
                 showImageAvatar(destFile.toURI().toString());
 
-                // Tampilkan tombol hapus
+                
                 btnHapusFoto.setVisible(true);
                 btnHapusFoto.setManaged(true);
 
-                // Simpan ke DB langsung
+                
                 userDAO.updateProfilePicture(currentUser.id, pendingPicturePath);
                 currentUser.profilePicturePath = pendingPicturePath;
 
-                // Sinkronisasi topbar
+                
                 if (dashboardController != null) {
                     dashboardController.updateTopbarAvatar(currentUser);
                 }
@@ -203,7 +196,7 @@ public class SettingController implements Initializable {
                 btnHapusFoto.setVisible(false);
                 btnHapusFoto.setManaged(false);
                 
-                // Sinkronisasi topbar
+                
                 if (dashboardController != null) {
                     dashboardController.updateTopbarAvatar(currentUser);
                 }
@@ -220,7 +213,7 @@ public class SettingController implements Initializable {
         String phone       = tfPhone.getText().trim();
         String bio         = taBio.getText().trim();
 
-        // Validasi
+        
         if (fullName.isEmpty()) {
             showSaveStatus("⚠ Full Name tidak boleh kosong", "#ef4444");
             tfFullName.requestFocus();
@@ -234,17 +227,17 @@ public class SettingController implements Initializable {
 
         boolean ok = userDAO.updateProfile(currentUser.id, fullName, displayName, phone, bio);
         if (ok) {
-            // Update state lokal
+            
             currentUser.fullName    = fullName;
             currentUser.displayName = displayName.isEmpty() ? null : displayName;
             currentUser.phone       = phone.isEmpty() ? null : phone;
             currentUser.bio         = bio.isEmpty() ? null : bio;
 
-            // Update tampilan avatar & nama
+            
             lblAvatarInitial.setText(currentUser.getInitial());
             lblProfileName.setText(currentUser.getEffectiveName());
 
-            // Sinkronisasi topbar (inisial mungkin berubah)
+            
             if (dashboardController != null) {
                 dashboardController.updateTopbarAvatar(currentUser);
             }
@@ -261,7 +254,7 @@ public class SettingController implements Initializable {
         showSaveStatus("", "#9ba3b8");
     }
 
-    // ── Security Tab Handlers ─────────────────────────────────────────────────
+    
 
     @FXML
     private void handlePasswordStrength() {
@@ -275,7 +268,7 @@ public class SettingController implements Initializable {
         String newPw   = pfNewPassword.getText();
         String confirm = pfConfirmPassword.getText();
 
-        // Validasi input
+        
         if (oldPw.isEmpty() || newPw.isEmpty() || confirm.isEmpty()) {
             showAlert("Validasi", "Semua field password harus diisi.");
             return;
@@ -296,7 +289,7 @@ public class SettingController implements Initializable {
             return;
         }
 
-        // Proses ganti password
+        
         boolean ok = userDAO.changePassword(currentUser.id, oldPw, newPw);
         if (ok) {
             showInfo("Berhasil", "Password berhasil diubah.\nSilakan login kembali dengan password baru jika diperlukan.");
@@ -316,7 +309,7 @@ public class SettingController implements Initializable {
         confirm.showAndWait();
     }
 
-    // ── Helpers: UI Population ────────────────────────────────────────────────
+    
 
     private void populateProfileForm() {
         if (currentUser == null) return;
@@ -327,7 +320,7 @@ public class SettingController implements Initializable {
         tfPhone.setText(currentUser.phone != null ? currentUser.phone : "");
         taBio.setText(currentUser.bio != null ? currentUser.bio : "");
 
-        // Panel kiri: info
+        
         lblProfileName.setText(currentUser.getEffectiveName());
         lblProfileRole.setText(currentUser.role != null ? currentUser.role.toUpperCase() : "USER");
         lblProfileEmail.setText(currentUser.email != null ? currentUser.email : "");
@@ -335,7 +328,7 @@ public class SettingController implements Initializable {
         lblInfoRole.setText(currentUser.role != null
                 ? currentUser.role.substring(0, 1).toUpperCase() + currentUser.role.substring(1)
                 : "User");
-        lblInfoSince.setText("2026"); // placeholder, bisa query dari DB
+        lblInfoSince.setText("2026"); 
 
         lblAvatarInitial.setText(currentUser.getInitial());
     }
@@ -360,7 +353,7 @@ public class SettingController implements Initializable {
             Image img = new Image(uriString, 100, 100, true, true);
             imgAvatar.setImage(img);
 
-            // Clip lingkaran
+            
             Circle clip = new Circle(50, 50, 50);
             imgAvatar.setClip(clip);
 
@@ -383,7 +376,7 @@ public class SettingController implements Initializable {
         }
     }
 
-    // ── Helpers: Password ─────────────────────────────────────────────────────
+    
 
     private void updateStrengthBar(String pw) {
         int score = calculateStrength(pw);

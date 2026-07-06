@@ -10,9 +10,7 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.mycompany.tugas_akhir.ReportController">
 
-    <!-- ======================================================
-         HEADER BAR
-         ====================================================== -->
+    
     <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 0 0 4 0;">
         <VBox spacing="3">
             <Label text="Report" styleClass="section-page-title"/>
@@ -20,9 +18,7 @@
         </VBox>
     </HBox>
 
-    <!-- ======================================================
-         FILTER BAR
-         ====================================================== -->
+    
     <VBox styleClass="card" spacing="12">
         <HBox alignment="CENTER_LEFT" spacing="8">
             <Label text="🔍 Filter Laporan" styleClass="card-title"/>
@@ -30,7 +26,7 @@
 
         <HBox spacing="12" alignment="CENTER_LEFT">
 
-            <!-- Dari Tanggal -->
+            
             <VBox spacing="4">
                 <Label text="Dari Tanggal" styleClass="form-label"/>
                 <DatePicker fx:id="dpStartDate"
@@ -39,7 +35,7 @@
                             prefWidth="150"/>
             </VBox>
 
-            <!-- Sampai Tanggal -->
+            
             <VBox spacing="4">
                 <Label text="Sampai Tanggal" styleClass="form-label"/>
                 <DatePicker fx:id="dpEndDate"
@@ -48,7 +44,7 @@
                             prefWidth="150"/>
             </VBox>
 
-            <!-- Tipe Transaksi -->
+            
             <VBox spacing="4">
                 <Label text="Tipe Transaksi" styleClass="form-label"/>
                 <ComboBox fx:id="cbTipe"
@@ -59,7 +55,7 @@
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- Tombol Generate -->
+            
             <VBox spacing="4" alignment="BOTTOM_LEFT">
                 <Label text=" " styleClass="form-label"/>
                 <HBox spacing="8">
@@ -78,7 +74,7 @@
 
         </HBox>
 
-        <!-- Info periode aktif -->
+        
         <HBox fx:id="boxPeriodeInfo" spacing="6" alignment="CENTER_LEFT"
               style="-fx-background-color: #f0f4ff; -fx-background-radius: 8; -fx-padding: 7 12 7 12;"
               visible="false" managed="false">
@@ -89,12 +85,10 @@
 
     </VBox>
 
-    <!-- ======================================================
-         SUMMARY CARDS (4 buah)
-         ====================================================== -->
+    
     <HBox spacing="12">
 
-        <!-- Total Transaksi -->
+        
         <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
             <HBox spacing="8" alignment="TOP_LEFT">
                 <Label text="📊" style="-fx-font-size: 22px;"/>
@@ -107,7 +101,7 @@
             </HBox>
         </VBox>
 
-        <!-- Total Masuk -->
+        
         <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
             <HBox spacing="8" alignment="TOP_LEFT">
                 <Label text="📥" style="-fx-font-size: 22px;"/>
@@ -120,7 +114,7 @@
             </HBox>
         </VBox>
 
-        <!-- Total Keluar -->
+        
         <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
             <HBox spacing="8" alignment="TOP_LEFT">
                 <Label text="📤" style="-fx-font-size: 22px;"/>
@@ -133,7 +127,7 @@
             </HBox>
         </VBox>
 
-        <!-- Barang Aktif -->
+        
         <VBox styleClass="stat-card" spacing="6" HBox.hgrow="ALWAYS">
             <HBox spacing="8" alignment="TOP_LEFT">
                 <Label text="📦" style="-fx-font-size: 22px;"/>
@@ -148,12 +142,10 @@
 
     </HBox>
 
-    <!-- ======================================================
-         ROW: TABEL LAPORAN + TOP BARANG
-         ====================================================== -->
+    
     <HBox spacing="16" VBox.vgrow="ALWAYS">
 
-        <!-- ── Tabel Laporan Transaksi ──────────────────────────── -->
+        
         <VBox styleClass="card" spacing="12" HBox.hgrow="ALWAYS">
             <HBox alignment="CENTER_LEFT" spacing="8">
                 <Label text="📋 Tabel Laporan Transaksi" styleClass="card-title"/>
@@ -187,10 +179,10 @@
             </TableView>
         </VBox>
 
-        <!-- ── Panel Kanan: Top Barang Aktif ──────────────────────── -->
+        
         <VBox spacing="12" style="-fx-pref-width: 240px; -fx-min-width: 220px; -fx-max-width: 260px;">
 
-            <!-- Top Barang -->
+            
             <VBox styleClass="card" spacing="12" VBox.vgrow="ALWAYS">
                 <HBox alignment="CENTER_LEFT" spacing="8">
                     <Label text="🏆 Top Barang Aktif" styleClass="card-title"/>
@@ -198,14 +190,14 @@
                     <Label text="Top 5" styleClass="card-badge"/>
                 </HBox>
 
-                <!-- Ranking container - diisi dari controller -->
+                
                 <VBox fx:id="vboxTopBarang" spacing="6">
                     <Label text="Generate report untuk melihat top barang"
                            style="-fx-text-fill: #9ba3b8; -fx-font-size: 11px; -fx-wrap-text: true;"/>
                 </VBox>
             </VBox>
 
-            <!-- Legend Card -->
+            
             <VBox styleClass="card" spacing="10">
                 <Label text="📌 Keterangan" styleClass="card-title"/>
                 <HBox spacing="8" alignment="CENTER_LEFT">

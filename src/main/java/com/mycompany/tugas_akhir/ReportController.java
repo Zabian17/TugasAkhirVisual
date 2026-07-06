@@ -14,33 +14,25 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 
-/**
- * Controller untuk halaman Report.
- * Menampilkan laporan transaksi berdasarkan filter periode dan tipe.
- */
+
 public class ReportController implements Initializable {
 
-    // ── DAO ───────────────────────────────────────────────────────────────────
     private final TransaksiDAO transaksiDAO = new TransaksiDAO();
 
-    // ── Format tanggal untuk query DB ─────────────────────────────────────────
     private static final DateTimeFormatter DB_FORMAT   = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter DISP_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    // ── FXML Filter ───────────────────────────────────────────────────────────
     @FXML private DatePicker dpStartDate;
     @FXML private DatePicker dpEndDate;
     @FXML private ComboBox<String> cbTipe;
     @FXML private HBox boxPeriodeInfo;
     @FXML private Label lblPeriodeInfo;
 
-    // ── FXML Summary Cards ────────────────────────────────────────────────────
     @FXML private Label lblTotalTx;
     @FXML private Label lblTotalMasuk;
     @FXML private Label lblTotalKeluar;
     @FXML private Label lblBarangAktif;
 
-    // ── FXML Tabel ────────────────────────────────────────────────────────────
     @FXML private TableView<ReportRow> tableReport;
     @FXML private TableColumn<ReportRow, Integer> colNo;
     @FXML private TableColumn<ReportRow, String>  colKodeTx;
@@ -52,10 +44,8 @@ public class ReportController implements Initializable {
     @FXML private TableColumn<ReportRow, String>  colTanggal;
     @FXML private Label lblJumlahData;
 
-    // ── FXML Top Barang ───────────────────────────────────────────────────────
     @FXML private VBox vboxTopBarang;
 
-    // ── Model row untuk TableView ─────────────────────────────────────────────
     public static class ReportRow {
         private final int    no;
         private final String kodeTx;
@@ -88,23 +78,18 @@ public class ReportController implements Initializable {
         public String getTanggal()  { return tanggal; }
     }
 
-    // ── Initialize ────────────────────────────────────────────────────────────
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setupComboTipe();
         setupTableColumns();
         setDefaultDateRange();
-        // Auto-load data dengan periode default (tanpa membuka viewer)
         loadReport(false);
     }
 
-    /**
-     * Dipanggil oleh DashboardController setelah load FXML.
-     */
+
     public void initUser(UserDAO.User user) {
     }
 
-    // ── Setup ─────────────────────────────────────────────────────────────────
 
     private void setupComboTipe() {
         cbTipe.setItems(FXCollections.observableArrayList("Semua", "Masuk", "Keluar"));
@@ -120,7 +105,6 @@ public class ReportController implements Initializable {
         colRak.setCellValueFactory(new PropertyValueFactory<>("rak"));
         colTanggal.setCellValueFactory(new PropertyValueFactory<>("tanggal"));
 
-        // Custom cell factory untuk kolom Tipe (warna berbeda masuk/keluar)
         colTipe.setCellValueFactory(new PropertyValueFactory<>("tipe"));
         colTipe.setCellFactory(col -> new TableCell<>() {
             @Override
@@ -140,7 +124,6 @@ public class ReportController implements Initializable {
             }
         });
 
-        // Kolom Jumlah: kanan align
         colJumlah.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -158,20 +141,16 @@ public class ReportController implements Initializable {
     private void setDefaultDateRange() {
         LocalDate today = LocalDate.now();
         dpEndDate.setValue(today);
-        dpStartDate.setValue(today.minusDays(29)); // 30 hari terakhir
+        dpStartDate.setValue(today.minusDays(29));
     }
 
-    // ── FXML Handlers ─────────────────────────────────────────────────────────
 
     @FXML
     private void handleGenerateReport() {
         loadReport(true);
     }
 
-    /**
-     * Muat data laporan ke tabel dan summary card.
-     * Jika openViewer=true, juga membuka JasperReports viewer setelah data dimuat.
-     */
+
     private void loadReport(boolean openViewer) {
         LocalDate start = dpStartDate.getValue();
         LocalDate end   = dpEndDate.getValue();
@@ -193,14 +172,12 @@ public class ReportController implements Initializable {
         loadTable(startStr, endStr, tipe);
         loadTopBarang(startStr, endStr);
 
-        // Tampilkan info periode
         lblPeriodeInfo.setText("Menampilkan data periode: "
             + start.format(DISP_FORMAT) + "  \u2192  " + end.format(DISP_FORMAT)
             + "   |   Tipe: " + tipe);
         boxPeriodeInfo.setVisible(true);
         boxPeriodeInfo.setManaged(true);
 
-        // Buka JasperReports viewer hanya jika diminta (klik tombol Generate Report)
         if (openViewer) {
             try {
                 int[] summary = transaksiDAO.getReportSummary(startStr, endStr);
@@ -235,7 +212,6 @@ public class ReportController implements Initializable {
         );
         boxPeriodeInfo.setVisible(false);
         boxPeriodeInfo.setManaged(false);
-        // Auto-reload dengan range default (tanpa membuka viewer)
         loadReport(false);
     }
 
@@ -246,7 +222,6 @@ public class ReportController implements Initializable {
 
 
 
-    // ── Data Loading ──────────────────────────────────────────────────────────
 
     private void loadSummary(String startDate, String endDate) {
         int[] summary = transaksiDAO.getReportSummary(startDate, endDate);
@@ -298,15 +273,12 @@ public class ReportController implements Initializable {
             String color  = rankColors[Math.min(rank, rankColors.length - 1)];
             String medal  = medals[Math.min(rank, medals.length - 1)];
 
-            // Kontainer satu baris ranking
             HBox row = new HBox(8);
             row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
-            // Badge ranking
             Label lblMedal = new Label(medal);
             lblMedal.setStyle("-fx-font-size: 16px;");
 
-            // Info barang
             VBox info = new VBox(2);
             HBox.setHgrow(info, Priority.ALWAYS);
 
@@ -319,7 +291,6 @@ public class ReportController implements Initializable {
 
             info.getChildren().addAll(lblNama, lblDetail);
 
-            // Total
             Label lblTotal = new Label(String.valueOf(tb.totalTransaksi) + " tx");
             lblTotal.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: " + color
                 + "; -fx-background-color: derive(" + color + ", 85%); -fx-background-radius: 6;"
@@ -329,7 +300,6 @@ public class ReportController implements Initializable {
 
             vboxTopBarang.getChildren().add(row);
 
-            // Separator (kecuali baris terakhir)
             if (rank < topList.size() - 1) {
                 Pane sep = new Pane();
                 sep.setStyle("-fx-background-color: #f0f2f5; -fx-pref-height: 1px; -fx-min-height: 1px; -fx-max-height: 1px;");
@@ -339,8 +309,6 @@ public class ReportController implements Initializable {
             rank++;
         }
     }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
 
     private Label buildInfoLabel(String text) {
         Label lbl = new Label(text);

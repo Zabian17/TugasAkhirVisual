@@ -4,13 +4,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object untuk tabel `customer`.
- * Mengelola data customer termasuk nama, posisi, alamat, kontak.
- */
+
 public class CustomerDAO {
 
-    // ── Model ─────────────────────────────────────────────────────────────────
     public static class Customer {
         public int    id;
         public String namaCustomer;
@@ -37,7 +33,6 @@ public class CustomerDAO {
         }
     }
 
-    // ── Ambil semua customer ──────────────────────────────────────────────────
     public List<Customer> getAllCustomer() {
         List<Customer> list = new ArrayList<>();
         String sql = "SELECT id, nama_customer, posisi, alamat, kontak, email, status FROM customer ORDER BY nama_customer";
@@ -61,7 +56,6 @@ public class CustomerDAO {
         return list;
     }
 
-    // ── Cari customer berdasarkan nama ────────────────────────────────────────
     public List<Customer> searchCustomer(String keyword) {
         List<Customer> list = new ArrayList<>();
         String sql = "SELECT id, nama_customer, posisi, alamat, kontak, email, status FROM customer " +
@@ -92,7 +86,6 @@ public class CustomerDAO {
         return list;
     }
 
-    // ── Filter customer berdasarkan status ────────────────────────────────────
     public List<Customer> getCustomerByStatus(String status) {
         List<Customer> list = new ArrayList<>();
         String sql = "SELECT id, nama_customer, posisi, alamat, kontak, email, status FROM customer " +
@@ -118,7 +111,6 @@ public class CustomerDAO {
         return list;
     }
 
-    // ── Tambah customer baru ──────────────────────────────────────────────────
     public boolean addCustomer(String namaCustomer, String posisi, String alamat, 
                               String kontak, String email) {
         String sql = "INSERT INTO customer (nama_customer, posisi, alamat, kontak, email, status) " +
@@ -138,7 +130,6 @@ public class CustomerDAO {
         }
     }
 
-    // ── Update customer ──────────────────────────────────────────────────────
     public boolean updateCustomer(int id, String namaCustomer, String posisi, String alamat, 
                                  String kontak, String email, String status) {
         String sql = "UPDATE customer SET nama_customer = ?, posisi = ?, alamat = ?, kontak = ?, email = ?, status = ? WHERE id = ?";
@@ -159,7 +150,6 @@ public class CustomerDAO {
         }
     }
 
-    // ── Hapus customer ───────────────────────────────────────────────────────
     public boolean deleteCustomer(int id) {
         String sql = "DELETE FROM customer WHERE id = ?";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();

@@ -1,16 +1,12 @@
-/* ============================================================
-   GUDANGKU - Dashboard Stylesheet
-   ============================================================ */
 
-/* ---- ROOT / BODY ---- */
+
+
 .root {
     -fx-font-family: "Segoe UI", "Arial", sans-serif;
     -fx-background-color: #f0f2f5;
 }
 
-/* ============================================================
-   SIDEBAR
-   ============================================================ */
+
 .sidebar {
     -fx-background-color: white;
     -fx-pref-width: 190px;
@@ -41,7 +37,7 @@
     -fx-font-weight: bold;
 }
 
-/* ---- NAV ITEMS ---- */
+
 .nav-item {
     -fx-background-color: transparent;
     -fx-background-radius: 10;
@@ -101,9 +97,7 @@
     -fx-padding: 12 12 4 12;
 }
 
-/* ============================================================
-   TOPBAR
-   ============================================================ */
+
 .topbar {
     -fx-background-color: white;
     -fx-pref-height: 64px;
@@ -179,18 +173,14 @@
     -fx-cursor: hand;
 }
 
-/* ============================================================
-   CONTENT AREA
-   ============================================================ */
+
 .content-area {
     -fx-background-color: #f0f2f5;
     -fx-padding: 20 24 20 24;
     -fx-spacing: 16;
 }
 
-/* ============================================================
-   CARDS
-   ============================================================ */
+
 .card {
     -fx-background-color: white;
     -fx-background-radius: 16;
@@ -213,9 +203,7 @@
     -fx-font-weight: bold;
 }
 
-/* ============================================================
-   SECTION OVERVIEW
-   ============================================================ */
+
 .section-header {
     -fx-font-size: 13px;
     -fx-font-weight: bold;
@@ -277,9 +265,7 @@
     -fx-background-color: #dc2626;
 }
 
-/* ============================================================
-   RECENT ACTIVITY
-   ============================================================ */
+
 .activity-card-in {
     -fx-background-color: #f0f4ff;
     -fx-background-radius: 12;
@@ -321,9 +307,7 @@
     -fx-text-fill: #ef4444;
 }
 
-/* ============================================================
-   RECENT TRANSACTION TABLE
-   ============================================================ */
+
 .table-header-label {
     -fx-font-size: 12px;
     -fx-font-weight: bold;
@@ -352,9 +336,7 @@
     -fx-font-size: 16px;
 }
 
-/* ============================================================
-   STORAGE ALERT
-   ============================================================ */
+
 .alert-ok {
     -fx-font-size: 18px;
     -fx-text-fill: #10b981;
@@ -387,9 +369,7 @@
     -fx-text-fill: #374151;
 }
 
-/* ============================================================
-   TOP MOVERS
-   ============================================================ */
+
 .movers-item {
     -fx-font-size: 12px;
     -fx-text-fill: #374151;
@@ -407,12 +387,8 @@
     -fx-alignment: center;
 }
 
-/* ============================================================
-   DIVIDER
-   ============================================================ */
-/* ============================================================
-    DIVIDER
-    ============================================================ */
+
+
 .sidebar-divider {
     -fx-background-color: #f0f2f5;
     -fx-pref-height: 1px;
@@ -420,9 +396,7 @@
     -fx-max-height: 1px;
 }
 
-/* ============================================================
-    STORAGE PAGE - STATS & SECTIONS
-    ============================================================ */
+
 .stat-card {
     -fx-background-color: white;
     -fx-background-radius: 12;
@@ -451,9 +425,7 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0, 0, 3);
 }
 
-/* ============================================================
-    STORAGE PAGE - BUTTONS
-    ============================================================ */
+
 .btn-primary-small {
     -fx-background-color: #3b82f6;
     -fx-background-radius: 8;
@@ -485,9 +457,7 @@
     -fx-background-color: #f9fafb;
 }
 
-/* ============================================================
-    STORAGE PAGE - FILTER SECTION
-    ============================================================ */
+
 .search-box {
     -fx-background-color: #f9fafb;
     -fx-background-radius: 8;
@@ -521,9 +491,7 @@
     -fx-background-color: #ffffff;
 }
 
-/* ============================================================
-    STORAGE PAGE - DATA TABLE
-    ============================================================ */
+
 .data-table {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -567,11 +535,9 @@
     -fx-font-size: 12px;
 }
 
-/* ============================================================
-    REPORT PAGE / MOVEMENTS PAGE - SHARED STYLES
-    ============================================================ */
 
-/* Page Title inside content area */
+
+
 .section-page-title {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
@@ -583,14 +549,14 @@
     -fx-text-fill: #9ba3b8;
 }
 
-/* Form labels */
+
 .form-label {
     -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-text-fill: #374151;
 }
 
-/* Form input fields */
+
 .form-field {
     -fx-background-color: #f9fafb;
     -fx-background-radius: 8;
@@ -607,7 +573,7 @@
     -fx-background-color: white;
 }
 
-/* Form combo box */
+
 .form-combo {
     -fx-background-color: #f9fafb;
     -fx-background-radius: 8;
@@ -623,7 +589,7 @@
     -fx-background-color: white;
 }
 
-/* Form text area */
+
 .form-area {
     -fx-background-color: #f9fafb;
     -fx-background-radius: 8;
@@ -640,7 +606,7 @@
     -fx-background-color: white;
 }
 
-/* Primary button (full) */
+
 .btn-primary {
     -fx-background-color: #1a56db;
     -fx-background-radius: 8;
@@ -655,7 +621,7 @@
     -fx-background-color: #1448c0;
 }
 
-/* Outline button (full) */
+
 .btn-outline {
     -fx-background-color: transparent;
     -fx-border-color: #e5e7eb;
@@ -674,7 +640,7 @@
     -fx-background-color: #f0f4ff;
 }
 
-/* DatePicker styling */
+
 .date-picker {
     -fx-background-color: #f9fafb;
     -fx-border-color: #e5e7eb;
@@ -695,11 +661,9 @@
     -fx-padding: 6 8 6 8;
 }
 
-/* ============================================================
-    SETTING PAGE STYLES
-    ============================================================ */
 
-/* ── Tab Bar ──────────────────────────────────────────────── */
+
+
 .setting-tab-bar {
     -fx-background-color: white;
     -fx-border-color: #e5e7eb;
@@ -736,7 +700,7 @@
     -fx-background-radius: 0;
 }
 
-/* ── Avatar ──────────────────────────────────────────────── */
+
 .setting-avatar-stack {
     -fx-pref-width: 100px;
     -fx-pref-height: 100px;
@@ -761,7 +725,7 @@
     -fx-font-weight: bold;
 }
 
-/* ── Profile info labels ─────────────────────────────────── */
+
 .setting-profile-name {
     -fx-font-size: 16px;
     -fx-font-weight: bold;
@@ -785,7 +749,7 @@
     -fx-alignment: center;
 }
 
-/* ── Form read-only field ────────────────────────────────── */
+
 .form-field-readonly {
     -fx-background-color: #f3f4f6;
     -fx-background-radius: 8;
@@ -797,13 +761,13 @@
     -fx-padding: 8 12 8 12;
 }
 
-/* ── Strength bar (inactive state) ──────────────────────── */
+
 .strength-bar-inactive {
     -fx-background-color: #e5e7eb;
     -fx-background-radius: 2;
 }
 
-/* ── Danger card & button ────────────────────────────────── */
+
 .setting-danger-card {
     -fx-background-color: white;
     -fx-background-radius: 16;

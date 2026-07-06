@@ -11,9 +11,7 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.mycompany.tugas_akhir.SettingController">
 
-    <!-- ======================================================
-         HEADER
-         ====================================================== -->
+    
     <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 0 0 4 0;">
         <VBox spacing="3">
             <Label text="Setting" styleClass="section-page-title"/>
@@ -21,9 +19,7 @@
         </VBox>
     </HBox>
 
-    <!-- ======================================================
-         TAB BAR
-         ====================================================== -->
+    
     <HBox spacing="0" styleClass="setting-tab-bar">
         <Button fx:id="btnTabProfile" text="👤  Profile"
                 styleClass="setting-tab-active"
@@ -34,20 +30,18 @@
         <Region HBox.hgrow="ALWAYS"/>
     </HBox>
 
-    <!-- ======================================================
-         TAB CONTENT: PROFILE
-         ====================================================== -->
+    
     <HBox fx:id="tabProfile" spacing="20">
 
-        <!-- ── Left Panel: Avatar + Info ──────────────────────── -->
+        
         <VBox spacing="16" style="-fx-pref-width: 260px; -fx-min-width: 240px; -fx-max-width: 280px;">
 
-            <!-- Avatar Card -->
+            
             <VBox styleClass="card" spacing="16" alignment="CENTER">
 
-                <!-- Avatar Circle -->
+                
                 <StackPane fx:id="avatarStack" styleClass="setting-avatar-stack">
-                    <!-- Foto profil (ImageView, hidden by default) -->
+                    
                     <ImageView fx:id="imgAvatar"
                                fitWidth="100" fitHeight="100"
                                preserveRatio="false"
@@ -56,13 +50,13 @@
                             <Circle centerX="50" centerY="50" radius="50"/>
                         </clip>
                     </ImageView>
-                    <!-- Fallback: Inisial text -->
+                    
                     <StackPane fx:id="avatarFallback" styleClass="setting-avatar-circle">
                         <Label fx:id="lblAvatarInitial" text="?" styleClass="setting-avatar-initial"/>
                     </StackPane>
                 </StackPane>
 
-                <!-- Nama & role -->
+                
                 <VBox spacing="4" alignment="CENTER">
                     <Label fx:id="lblProfileName" text="Nama User"
                            styleClass="setting-profile-name"/>
@@ -72,14 +66,14 @@
                            styleClass="setting-profile-email"/>
                 </VBox>
 
-                <!-- Tombol upload foto -->
+                
                 <Button text="📷  Ganti Foto"
                         styleClass="btn-outline-small"
                         onAction="#handleUploadPhoto"
                         maxWidth="Infinity"
                         style="-fx-padding: 8 16 8 16; -fx-font-size: 12px;"/>
 
-                <!-- Hapus foto -->
+                
                 <Button fx:id="btnHapusFoto" text="🗑  Hapus Foto"
                         styleClass="setting-btn-danger-outline"
                         onAction="#handleHapusFoto"
@@ -88,7 +82,7 @@
                         style="-fx-padding: 7 16 7 16; -fx-font-size: 12px;"/>
             </VBox>
 
-            <!-- Info Card -->
+            
             <VBox styleClass="card" spacing="10">
                 <Label text="Info Akun" styleClass="card-title"/>
                 <Pane styleClass="table-row-separator"/>
@@ -122,10 +116,10 @@
             </VBox>
         </VBox>
 
-        <!-- ── Right Panel: Form Edit Profil ──────────────────── -->
+        
         <VBox spacing="16" HBox.hgrow="ALWAYS">
 
-            <!-- Form Profil -->
+            
             <VBox styleClass="card" spacing="16">
                 <HBox alignment="CENTER_LEFT" spacing="8">
                     <Label text="Edit Profil" styleClass="card-title"/>
@@ -135,7 +129,7 @@
                 </HBox>
                 <Pane styleClass="table-row-separator"/>
 
-                <!-- Row 1: Full Name + Display Name -->
+                
                 <HBox spacing="16">
                     <VBox spacing="6" HBox.hgrow="ALWAYS">
                         <HBox alignment="CENTER_LEFT" spacing="4">
@@ -157,7 +151,7 @@
                     </VBox>
                 </HBox>
 
-                <!-- Row 2: Email (read-only) + Phone -->
+                
                 <HBox spacing="16">
                     <VBox spacing="6" HBox.hgrow="ALWAYS">
                         <HBox alignment="CENTER_LEFT" spacing="4">
@@ -178,7 +172,7 @@
                     </VBox>
                 </HBox>
 
-                <!-- Bio -->
+                
                 <VBox spacing="6">
                     <HBox alignment="CENTER_LEFT" spacing="4">
                         <Label text="Bio" styleClass="form-label"/>
@@ -191,7 +185,7 @@
                               wrapText="true"/>
                 </VBox>
 
-                <!-- Tombol Simpan -->
+                
                 <HBox alignment="CENTER_RIGHT" spacing="10">
                     <Button text="↺  Reset Form"
                             styleClass="btn-outline-small"
@@ -207,12 +201,10 @@
         </VBox>
     </HBox>
 
-    <!-- ======================================================
-         TAB CONTENT: SECURITY
-         ====================================================== -->
+    
     <HBox fx:id="tabSecurity" spacing="20" managed="false" visible="false">
 
-        <!-- ── Kiri: Ganti Password ──────────────────────────── -->
+        
         <VBox spacing="16" style="-fx-pref-width: 420px; -fx-min-width: 380px; -fx-max-width: 460px;">
             <VBox styleClass="card" spacing="16">
                 <HBox alignment="CENTER_LEFT" spacing="8">
@@ -220,7 +212,7 @@
                 </HBox>
                 <Pane styleClass="table-row-separator"/>
 
-                <!-- Password Lama -->
+                
                 <VBox spacing="6">
                     <HBox alignment="CENTER_LEFT" spacing="4">
                         <Label text="Password Saat Ini" styleClass="form-label"/>
@@ -231,7 +223,7 @@
                                    styleClass="form-field"/>
                 </VBox>
 
-                <!-- Password Baru -->
+                
                 <VBox spacing="6">
                     <HBox alignment="CENTER_LEFT" spacing="4">
                         <Label text="Password Baru" styleClass="form-label"/>
@@ -242,7 +234,7 @@
                                    styleClass="form-field"
                                    onKeyReleased="#handlePasswordStrength"/>
 
-                    <!-- Strength indicator -->
+                    
                     <HBox spacing="8" alignment="CENTER_LEFT">
                         <HBox fx:id="strengthBar" spacing="4">
                             <Pane fx:id="bar1" styleClass="strength-bar-inactive"
@@ -259,7 +251,7 @@
                     </HBox>
                 </VBox>
 
-                <!-- Konfirmasi Password Baru -->
+                
                 <VBox spacing="6">
                     <HBox alignment="CENTER_LEFT" spacing="4">
                         <Label text="Konfirmasi Password Baru" styleClass="form-label"/>
@@ -272,7 +264,7 @@
                            style="-fx-font-size: 11px;"/>
                 </VBox>
 
-                <!-- Tombol ubah password -->
+                
                 <Button text="🔒  Ubah Password"
                         styleClass="btn-primary"
                         onAction="#handleUbahPassword"
@@ -281,7 +273,7 @@
             </VBox>
         </VBox>
 
-        <!-- ── Kanan: Tips Keamanan ──────────────────────────── -->
+        
         <VBox spacing="16" HBox.hgrow="ALWAYS">
             <VBox styleClass="card" spacing="14">
                 <Label text="🛡 Tips Keamanan Password" styleClass="card-title"/>
@@ -315,7 +307,7 @@
 
                 <Pane styleClass="table-row-separator"/>
 
-                <!-- Strength legend -->
+                
                 <Label text="Indikator Kekuatan Password:" styleClass="form-label"/>
                 <HBox spacing="12" alignment="CENTER_LEFT">
                     <HBox spacing="4" alignment="CENTER_LEFT">
@@ -333,7 +325,7 @@
                 </HBox>
             </VBox>
 
-            <!-- Danger Zone -->
+            
             <VBox styleClass="setting-danger-card" spacing="12">
                 <Label text="⚠️ Danger Zone" styleClass="card-title"
                        style="-fx-text-fill: #ef4444;"/>

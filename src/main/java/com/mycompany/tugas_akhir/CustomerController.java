@@ -11,10 +11,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-/**
- * Controller untuk halaman Customer.
- * Menampilkan daftar customer dalam bentuk card grid dengan fitur filter dan search.
- */
+
 public class CustomerController implements Initializable {
 
     @FXML private ComboBox<String> cbCategory;
@@ -33,7 +30,6 @@ public class CustomerController implements Initializable {
     }
 
     public void initUser(UserDAO.User user) {
-        // User context available for future use if needed
     }
 
     private void setupFilters() {
@@ -52,7 +48,6 @@ public class CustomerController implements Initializable {
     private void applyFilters() {
         filteredCustomers = allCustomers;
 
-        // Filter by status
         String selectedStatus = cbStatus.getValue();
         if (selectedStatus != null && !selectedStatus.equals("All status")) {
             filteredCustomers = filteredCustomers.stream()
@@ -60,7 +55,6 @@ public class CustomerController implements Initializable {
                 .toList();
         }
 
-        // Filter by search term
         String searchTerm = tfSearch.getText().trim().toLowerCase();
         if (!searchTerm.isEmpty()) {
             filteredCustomers = filteredCustomers.stream()
@@ -96,11 +90,9 @@ public class CustomerController implements Initializable {
                       "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 2);");
         card.setPrefWidth(300);
 
-        // Company Name
         Label lblName = new Label(customer.namaCustomer);
         lblName.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1f2937;");
 
-        // Position
         HBox positionBox = new HBox(8);
         positionBox.setAlignment(Pos.CENTER_LEFT);
         Label iconPos = new Label("👤");
@@ -108,22 +100,18 @@ public class CustomerController implements Initializable {
         lblPosition.setStyle("-fx-font-size: 12px; -fx-text-fill: #9ba3b8;");
         positionBox.getChildren().addAll(iconPos, lblPosition);
 
-        // Address (without icon)
         Label lblAddress = new Label(customer.alamat);
         lblAddress.setStyle("-fx-font-size: 12px; -fx-text-fill: #9ba3b8;");
         lblAddress.setWrapText(true);
 
-        // Phone (without icon)
         Label lblPhone = new Label(customer.kontak);
         lblPhone.setStyle("-fx-font-size: 12px; -fx-text-fill: #9ba3b8;");
 
-        // Status badge
         Label lblStatus = new Label(customer.status);
         String statusColor = "Aktif".equals(customer.status) ? "#10b981" : "#ef4444";
         lblStatus.setStyle("-fx-font-size: 10px; -fx-text-fill: white; -fx-padding: 4 8; " +
                           "-fx-background-color: " + statusColor + "; -fx-background-radius: 4;");
 
-        // Buttons
         HBox buttonBox = new HBox(10);
         buttonBox.setAlignment(Pos.CENTER);
 
@@ -139,7 +127,6 @@ public class CustomerController implements Initializable {
 
         buttonBox.getChildren().addAll(btnEdit, btnContact);
 
-        // Add all elements to card
         card.getChildren().addAll(
             lblName,
             lblStatus,
