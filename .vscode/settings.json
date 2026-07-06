@@ -1,6 +1,0 @@
-{
-    "css.validate": false,
-    "css.lint.vendorPrefix": "ignore",
-    "css.lint.unknownProperties": "ignore",
-    "java.configuration.updateBuildConfiguration": "interactive"
-}
