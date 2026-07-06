@@ -151,9 +151,6 @@ public class LoginController implements Initializable {
             dashCtrl.initUser(user);
             
             stage.show();
-            
-            // Set fullscreen AFTER stage is shown to ensure it properly applies
-            stage.setFullScreen(true);
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Gagal membuka dashboard: " + e.getMessage());

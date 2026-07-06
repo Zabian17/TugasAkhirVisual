@@ -187,86 +187,13 @@ public class StorageController implements Initializable {
             showAlert(Alert.AlertType.WARNING, "Export Gagal", "Tidak ada data barang untuk diekspor.");
             return;
         }
-        
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Simpan File PDF");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
-        fileChooser.setInitialFileName("Inventory_" + System.currentTimeMillis() + ".pdf");
-        
-        java.io.File selectedFile = fileChooser.showSaveDialog(tableBarang.getScene().getWindow());
-        if (selectedFile != null) {
-            try {
-                exportToPDF(selectedFile);
-                showAlert(Alert.AlertType.INFORMATION, "Berhasil", 
-                    "File PDF berhasil disimpan di:\n" + selectedFile.getAbsolutePath());
-            } catch (Exception e) {
-                showAlert(Alert.AlertType.ERROR, "Error Export", 
-                    "Gagal mengekspor ke PDF:\n" + e.getMessage());
-                e.printStackTrace();
-            }
+        try {
+            ReportGeneratorService.showInventarisReport(new java.util.ArrayList<>(barangList));
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error Report",
+                "Gagal menampilkan report:\n" + e.getMessage());
+            e.printStackTrace();
         }
-    }
-
-    private void exportToPDF(java.io.File file) throws Exception {
-        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
-        com.itextpdf.text.pdf.PdfWriter.getInstance(document, new java.io.FileOutputStream(file));
-        document.open();
-        
-        // Header
-        com.itextpdf.text.Paragraph title = new com.itextpdf.text.Paragraph("Laporan Inventaris Barang");
-        title.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-        title.getFont().setSize(18);
-        title.getFont().setStyle(com.itextpdf.text.Font.BOLD);
-        document.add(title);
-        
-        com.itextpdf.text.Paragraph date = new com.itextpdf.text.Paragraph(
-            "Tanggal: " + java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss")));
-        date.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-        date.getFont().setSize(10);
-        date.setSpacingAfter(12);
-        document.add(date);
-        
-        // Stats
-        long sehat = barangList.stream().filter(b -> b.stok > 0 && b.stok >= b.stokMin).count();
-        long rendah = barangList.stream().filter(b -> b.stok > 0 && b.stok < b.stokMin).count();
-        long habis = barangList.stream().filter(b -> b.stok <= 0).count();
-        
-        com.itextpdf.text.Paragraph stats = new com.itextpdf.text.Paragraph(
-            "Total Barang: " + barangList.size() + " | In Stock: " + sehat + " | Low Stock: " + rendah + " | Out of Stock: " + habis);
-        stats.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-        stats.getFont().setSize(10);
-        stats.setSpacingAfter(16);
-        document.add(stats);
-        
-        // Table
-        com.itextpdf.text.pdf.PdfPTable table = new com.itextpdf.text.pdf.PdfPTable(8);
-        table.setWidthPercentage(100);
-        
-        // Header cells
-        String[] headers = {"#", "ITEM / SKU", "CATEGORY", "LOCATION", "QTY", "MIN/MAX", "STATUS", "LAST UPDATE"};
-        for (String h : headers) {
-            com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Paragraph(h));
-            cell.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-            table.addCell(cell);
-        }
-        
-        // Data rows
-        int no = 1;
-        for (BarangDAO.Barang b : barangList) {
-            String status = b.stok <= 0 ? "No Stock" : (b.stok < b.stokMin ? "Low Stock" : "In Stock");
-            
-            table.addCell(String.valueOf(no++));
-            table.addCell(b.kodeBarang + " • " + b.namaBarang);
-            table.addCell(b.kategori);
-            table.addCell(b.lokasi);
-            table.addCell(String.valueOf(b.stok));
-            table.addCell(b.stokMin + " / " + b.stokMax);
-            table.addCell(status);
-            table.addCell(formatLastUpdate(b.lastUpdate));
-        }
-        
-        document.add(table);
-        document.close();
     }
 
     // ── Dialog Tambah / Edit ──────────────────────────────────────────────────

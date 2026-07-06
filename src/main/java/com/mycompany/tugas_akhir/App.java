@@ -18,7 +18,6 @@ public class App extends Application {
 
         stage.setTitle("GudangKu - Sistem Management Gudang");
         stage.setResizable(true);
-        stage.setFullScreen(true);
         stage.setScene(scene);
         stage.show();
     }

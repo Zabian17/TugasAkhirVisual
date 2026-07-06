@@ -94,8 +94,8 @@ public class ReportController implements Initializable {
         setupComboTipe();
         setupTableColumns();
         setDefaultDateRange();
-        // Auto-load data dengan periode default
-        handleGenerateReport();
+        // Auto-load data dengan periode default (tanpa membuka viewer)
+        loadReport(false);
     }
 
     /**
@@ -165,6 +165,14 @@ public class ReportController implements Initializable {
 
     @FXML
     private void handleGenerateReport() {
+        loadReport(true);
+    }
+
+    /**
+     * Muat data laporan ke tabel dan summary card.
+     * Jika openViewer=true, juga membuka JasperReports viewer setelah data dimuat.
+     */
+    private void loadReport(boolean openViewer) {
         LocalDate start = dpStartDate.getValue();
         LocalDate end   = dpEndDate.getValue();
 
@@ -187,10 +195,28 @@ public class ReportController implements Initializable {
 
         // Tampilkan info periode
         lblPeriodeInfo.setText("Menampilkan data periode: "
-            + start.format(DISP_FORMAT) + "  →  " + end.format(DISP_FORMAT)
+            + start.format(DISP_FORMAT) + "  \u2192  " + end.format(DISP_FORMAT)
             + "   |   Tipe: " + tipe);
         boxPeriodeInfo.setVisible(true);
         boxPeriodeInfo.setManaged(true);
+
+        // Buka JasperReports viewer hanya jika diminta (klik tombol Generate Report)
+        if (openViewer) {
+            try {
+                int[] summary = transaksiDAO.getReportSummary(startStr, endStr);
+                String periodeInfo = "Periode: " + start.format(DISP_FORMAT)
+                    + " \u2192 " + end.format(DISP_FORMAT) + "  |  Tipe: " + tipe;
+                ReportGeneratorService.showReportPeriode(
+                    new java.util.ArrayList<>(tableReport.getItems()),
+                    periodeInfo,
+                    summary
+                );
+            } catch (Exception e) {
+                showAlert("Generate Report Gagal",
+                    "Terjadi kesalahan saat menampilkan laporan: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
@@ -209,8 +235,8 @@ public class ReportController implements Initializable {
         );
         boxPeriodeInfo.setVisible(false);
         boxPeriodeInfo.setManaged(false);
-        // Auto-reload dengan range default
-        handleGenerateReport();
+        // Auto-reload dengan range default (tanpa membuka viewer)
+        loadReport(false);
     }
 
     @FXML
@@ -218,41 +244,7 @@ public class ReportController implements Initializable {
         handleGenerateReport();
     }
 
-    @FXML
-    private void handleExportCSV() {
-        // Export sederhana: tampilkan dialog konfirmasi data
-        ObservableList<ReportRow> data = tableReport.getItems();
-        if (data.isEmpty()) {
-            showAlert("Export CSV", "Tidak ada data untuk di-export. Silakan generate report terlebih dahulu.");
-            return;
-        }
 
-        // Build CSV string
-        StringBuilder csv = new StringBuilder();
-        csv.append("No,Kode Transaksi,Tipe,Barang,Supplier/Info,Jumlah,Rak,Tanggal\n");
-        for (ReportRow row : data) {
-            csv.append(row.getNo()).append(",");
-            csv.append(escapeCsv(row.getKodeTx())).append(",");
-            csv.append(escapeCsv(row.getTipe())).append(",");
-            csv.append(escapeCsv(row.getBarang())).append(",");
-            csv.append(escapeCsv(row.getSupplier())).append(",");
-            csv.append(escapeCsv(row.getJumlah())).append(",");
-            csv.append(escapeCsv(row.getRak())).append(",");
-            csv.append(escapeCsv(row.getTanggal())).append("\n");
-        }
-
-        // Simpan ke file di folder user home
-        String fileName = "laporan_gudang_" + LocalDate.now().format(DB_FORMAT) + ".csv";
-        java.io.File file = new java.io.File(System.getProperty("user.home"), fileName);
-        try (java.io.FileWriter fw = new java.io.FileWriter(file)) {
-            fw.write(csv.toString());
-            showInfo("Export Berhasil",
-                "File CSV berhasil disimpan di:\n" + file.getAbsolutePath() +
-                "\n\nTotal data: " + data.size() + " baris.");
-        } catch (java.io.IOException e) {
-            showAlert("Export Gagal", "Terjadi kesalahan saat menyimpan file: " + e.getMessage());
-        }
-    }
 
     // ── Data Loading ──────────────────────────────────────────────────────────
 
@@ -361,13 +353,6 @@ public class ReportController implements Initializable {
         return String.format("%,d", n).replace(',', '.');
     }
 
-    private String escapeCsv(String s) {
-        if (s == null) return "";
-        if (s.contains(",") || s.contains("\"") || s.contains("\n")) {
-            return "\"" + s.replace("\"", "\"\"") + "\"";
-        }
-        return s;
-    }
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -377,11 +362,5 @@ public class ReportController implements Initializable {
         alert.showAndWait();
     }
 
-    private void showInfo(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
 }

@@ -341,8 +341,20 @@ public class MovementsController implements Initializable {
 
         colStockOutKodeTx.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().kodeTransaksi));
         colStockOutNamaBarang.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().namaBarang));
-        colStockOutTujuan.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().keterangan != null ? d.getValue().keterangan : "-"));
-        colStockOutAlasan.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().keterangan != null ? d.getValue().keterangan : "-"));
+        colStockOutTujuan.setCellValueFactory(d -> {
+            String ket = d.getValue().keterangan;
+            if (ket != null && ket.contains(" - ")) {
+                return new SimpleStringProperty(ket.substring(0, ket.indexOf(" - ")));
+            }
+            return new SimpleStringProperty(ket != null ? ket : "-");
+        });
+        colStockOutAlasan.setCellValueFactory(d -> {
+            String ket = d.getValue().keterangan;
+            if (ket != null && ket.contains(" - ")) {
+                return new SimpleStringProperty(ket.substring(ket.indexOf(" - ") + 3));
+            }
+            return new SimpleStringProperty("-");
+        });
         colStockOutJumlah.setCellValueFactory(d -> new SimpleStringProperty(String.valueOf(d.getValue().jumlah)));
         colStockOutTanggal.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().tanggal));
         tableStockOutTransaksi.setItems(stockOutTxList);
@@ -388,7 +400,17 @@ public class MovementsController implements Initializable {
             return;
         }
 
-        String keterangan = taKeteranganStockOut.getText().trim();
+        String tujuan = tfTujuanStockOut.getText().trim();
+        String catatan = taKeteranganStockOut.getText().trim();
+        // Gabungkan tujuan + keterangan (pola: "Tujuan - Keterangan")
+        String keterangan;
+        if (!tujuan.isEmpty() && !catatan.isEmpty()) {
+            keterangan = tujuan + " - " + catatan;
+        } else if (!tujuan.isEmpty()) {
+            keterangan = tujuan;
+        } else {
+            keterangan = catatan;
+        }
         int userId = (currentUser != null) ? currentUser.id : 1;
 
         boolean ok = transaksiDAO.addTransaksi("keluar", barang.id, null, null, jumlah, keterangan, userId);
@@ -543,88 +565,28 @@ public class MovementsController implements Initializable {
     // EXPORT PDF METHODS
     // ════════════════════════════════════════════════════════════════════════════
 
-    @FXML private void handleExportAll() { exportMovementsToPDF(allTxList, "Laporan Semua Movement"); }
-    @FXML private void handleExportStockIn() { exportMovementsToPDF(stockInTxList, "Laporan Stock In"); }
-    @FXML private void handleExportStockOut() { exportMovementsToPDF(stockOutTxList, "Laporan Stock Out"); }
-    @FXML private void handleExportAdjustment() { exportMovementsToPDF(adjustmentTxList, "Laporan Adjustment"); }
-
-    private void exportMovementsToPDF(ObservableList<TransaksiDAO.Transaksi> txList, String title) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Simpan File PDF");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
-        fileChooser.setInitialFileName(title.replace(" ", "_") + ".pdf");
-        
-        File selectedFile = fileChooser.showSaveDialog(null);
-        if (selectedFile != null) {
-            try {
-                exportToPDF(selectedFile, txList, title);
-                showAlert(Alert.AlertType.INFORMATION, "Berhasil", 
-                    "File PDF berhasil disimpan di:\n" + selectedFile.getAbsolutePath());
-            } catch (Exception e) {
-                showAlert(Alert.AlertType.ERROR, "Error Export", 
-                    "Gagal mengekspor ke PDF:\n" + e.getMessage());
-                e.printStackTrace();
-            }
-        }
+    @FXML private void handleExportAll() {
+        if (allTxList.isEmpty()) { showAlert(Alert.AlertType.WARNING, "Report", "Tidak ada data untuk ditampilkan."); return; }
+        try { ReportGeneratorService.showMovementsAllReport(new java.util.ArrayList<>(allTxList), "Laporan Semua Movement"); }
+        catch (Exception e) { showAlert(Alert.AlertType.ERROR, "Error Report", "Gagal menampilkan report:\n" + e.getMessage()); e.printStackTrace(); }
     }
 
-    private void exportToPDF(File file, ObservableList<TransaksiDAO.Transaksi> txList, String title) throws Exception {
-        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
-        com.itextpdf.text.pdf.PdfWriter.getInstance(document, new java.io.FileOutputStream(file));
-        document.open();
-        
-        // Header
-        com.itextpdf.text.Paragraph titlePara = new com.itextpdf.text.Paragraph(title);
-        titlePara.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-        titlePara.getFont().setSize(18);
-        titlePara.getFont().setStyle(com.itextpdf.text.Font.BOLD);
-        document.add(titlePara);
-        
-        com.itextpdf.text.Paragraph date = new com.itextpdf.text.Paragraph(
-            "Tanggal: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm:ss")));
-        date.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-        date.getFont().setSize(10);
-        date.setSpacingAfter(12);
-        document.add(date);
-        
-        // Stats
-        long masuk = txList.stream().filter(t -> "masuk".equals(t.tipe)).count();
-        long keluar = txList.stream().filter(t -> "keluar".equals(t.tipe)).count();
-        
-        com.itextpdf.text.Paragraph stats = new com.itextpdf.text.Paragraph(
-            "Total Transaksi: " + txList.size() + " | Masuk: " + masuk + " | Keluar: " + keluar);
-        stats.setAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-        stats.getFont().setSize(10);
-        stats.setSpacingAfter(16);
-        document.add(stats);
-        
-        // Table
-        com.itextpdf.text.pdf.PdfPTable table = new com.itextpdf.text.pdf.PdfPTable(6);
-        table.setWidthPercentage(100);
-        
-        // Header cells
-        String[] headers = {"#", "KODE", "BARANG", "TIPE", "JUMLAH", "TANGGAL"};
-        for (String h : headers) {
-            com.itextpdf.text.pdf.PdfPCell cell = new com.itextpdf.text.pdf.PdfPCell(new com.itextpdf.text.Paragraph(h));
-            cell.setHorizontalAlignment(com.itextpdf.text.Element.ALIGN_CENTER);
-            table.addCell(cell);
-        }
-        
-        // Data rows
-        int no = 1;
-        for (TransaksiDAO.Transaksi t : txList) {
-            String tipe = "masuk".equals(t.tipe) ? "Masuk" : "Keluar";
-            
-            table.addCell(String.valueOf(no++));
-            table.addCell(t.kodeTransaksi);
-            table.addCell(t.namaBarang);
-            table.addCell(tipe);
-            table.addCell(String.valueOf(t.jumlah));
-            table.addCell(t.tanggal);
-        }
-        
-        document.add(table);
-        document.close();
+    @FXML private void handleExportStockIn() {
+        if (stockInTxList.isEmpty()) { showAlert(Alert.AlertType.WARNING, "Report", "Tidak ada data untuk ditampilkan."); return; }
+        try { ReportGeneratorService.showMovementsStockInReport(new java.util.ArrayList<>(stockInTxList), "Laporan Stock In"); }
+        catch (Exception e) { showAlert(Alert.AlertType.ERROR, "Error Report", "Gagal menampilkan report:\n" + e.getMessage()); e.printStackTrace(); }
+    }
+
+    @FXML private void handleExportStockOut() {
+        if (stockOutTxList.isEmpty()) { showAlert(Alert.AlertType.WARNING, "Report", "Tidak ada data untuk ditampilkan."); return; }
+        try { ReportGeneratorService.showMovementsStockOutReport(new java.util.ArrayList<>(stockOutTxList), "Laporan Stock Out"); }
+        catch (Exception e) { showAlert(Alert.AlertType.ERROR, "Error Report", "Gagal menampilkan report:\n" + e.getMessage()); e.printStackTrace(); }
+    }
+
+    @FXML private void handleExportAdjustment() {
+        if (adjustmentTxList.isEmpty()) { showAlert(Alert.AlertType.WARNING, "Report", "Tidak ada data untuk ditampilkan."); return; }
+        try { ReportGeneratorService.showMovementsAdjustmentReport(new java.util.ArrayList<>(adjustmentTxList), "Laporan Adjustment"); }
+        catch (Exception e) { showAlert(Alert.AlertType.ERROR, "Error Report", "Gagal menampilkan report:\n" + e.getMessage()); e.printStackTrace(); }
     }
 
     // ════════════════════════════════════════════════════════════════════════════

@@ -162,11 +162,6 @@
                 <Button text="🔄 Refresh" styleClass="btn-outline-small"
                         onAction="#handleRefresh"
                         style="-fx-padding: 6 12 6 12;"/>
-                <Button fx:id="btnExport"
-                        text="📥 Export CSV"
-                        styleClass="btn-outline-small"
-                        onAction="#handleExportCSV"
-                        style="-fx-padding: 6 12 6 12;"/>
             </HBox>
 
             <TableView fx:id="tableReport" prefHeight="380" styleClass="data-table">

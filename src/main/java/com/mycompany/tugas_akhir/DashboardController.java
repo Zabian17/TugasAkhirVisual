@@ -78,9 +78,6 @@ public class DashboardController implements Initializable {
         if (primaryStage == null && pageTitleLabel != null && pageTitleLabel.getScene() != null) {
             primaryStage = (Stage) pageTitleLabel.getScene().getWindow();
         }
-        
-        // Ensure fullscreen is applied after user init
-        ensureFullscreen();
     }
 
     /**
@@ -154,7 +151,6 @@ public class DashboardController implements Initializable {
         setActiveNav("dashboard");
         pageTitleLabel.setText("Dashboard");
         currentPage = "dashboard";
-        ensureFullscreen();
         loadDashboardPage();
     }
 
@@ -163,7 +159,6 @@ public class DashboardController implements Initializable {
         setActiveNav("storage");
         pageTitleLabel.setText("Storage");
         currentPage = "storage";
-        ensureFullscreen();
         loadStoragePage();
     }
 
@@ -172,7 +167,6 @@ public class DashboardController implements Initializable {
         setActiveNav("movements");
         pageTitleLabel.setText("Movements");
         currentPage = "movements";
-        ensureFullscreen();
         loadMovementsPage();
     }
 
@@ -181,7 +175,6 @@ public class DashboardController implements Initializable {
         setActiveNav("customer");
         pageTitleLabel.setText("Customer");
         currentPage = "customer";
-        ensureFullscreen();
         loadCustomerPage();
     }
 
@@ -190,7 +183,6 @@ public class DashboardController implements Initializable {
         setActiveNav("report");
         pageTitleLabel.setText("Report");
         currentPage = "report";
-        ensureFullscreen();
         loadReportPage();
     }
 
@@ -199,7 +191,6 @@ public class DashboardController implements Initializable {
         setActiveNav("setting");
         pageTitleLabel.setText("Setting");
         currentPage = "setting";
-        ensureFullscreen();
         loadSettingPage();
     }
 
@@ -280,22 +271,7 @@ public class DashboardController implements Initializable {
         });
     }
 
-    private void ensureFullscreen() {
-        // Always try to get fresh stage reference
-        if (pageTitleLabel != null && pageTitleLabel.getScene() != null) {
-            Stage currentStage = (Stage) pageTitleLabel.getScene().getWindow();
-            if (currentStage != null) {
-                primaryStage = currentStage;
-                primaryStage.setFullScreen(true);
-                return;
-            }
-        }
-        
-        // Fallback to cached reference
-        if (primaryStage != null) {
-            primaryStage.setFullScreen(true);
-        }
-    }
+
 
     private void goToLogin() {
         try {
@@ -305,7 +281,6 @@ public class DashboardController implements Initializable {
             Scene scene = new Scene(loader.load(), 950, 600);
             Stage stage = (Stage) pageTitleLabel.getScene().getWindow();
             stage.setTitle("GudangKu - Login");
-            stage.setFullScreen(false);
             stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
@@ -420,7 +395,6 @@ public class DashboardController implements Initializable {
             );
             VBox dashboardContent = loader.load();
             mainScrollPane.setContent(dashboardContent);
-            ensureFullscreen();
         } catch (IOException e) {
             e.printStackTrace();
             showInfo("Error", "Gagal load halaman Dashboard: " + e.getMessage());
